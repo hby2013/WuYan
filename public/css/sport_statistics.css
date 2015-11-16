@@ -1,0 +1,52 @@
+#header
+{
+	position:absolute;
+	width:100%;
+	height:20%;
+	background-color:#dddddd;
+}
+
+#head_img
+{
+	top:25%;
+	position:absolute;
+	left:5%;
+	height:50%;
+	border-radius:50%;
+	-moz-border-radius:50%;
+}
+#hello
+{
+	position:absolute;
+	left:30%;
+	top:30.11%;
+	font-size:1em;
+	color:#aaaaaa;
+}
+#statistic
+{
+	position:absolute;
+	left:30%;
+	bottom:28%;
+	font-size:1em;
+	width:70%;
+	color:#000000;
+}
+
+#myChart
+{
+	position:absolute;
+	left:10%;
+	width:80% !important;
+}
+
+#chart_title
+{
+	position:absolute;
+	top:20%;
+	left:10%;
+	color:black;
+	height:20%;
+	width:90%;
+	z-index:1000;
+}

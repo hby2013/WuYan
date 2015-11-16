@@ -1,0 +1,33 @@
+html
+  meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+  head
+    title 信息录入
+    script(src='/js/jquery.js')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0')
+    meta(name='apple-mobile-web-app-capable', content='yes')
+    meta(name='apple-mobile-web-app-status-bar-style', content='black')
+    meta(content='telephone=no', name='format-detection')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge,chrome=1')
+    meta(name='HandheldFriendly', content='true')
+  body(style='margin:0;padding:0;background-color:#eeeeee;font-family:微软雅黑')
+    img#choose_sex(src='/img/sex.png', style='position:absolute;width:100%;top:15%;')
+    #male(style='position:absolute;top:15%;left:54%;width:37%;box-shadow:inset 0 0 10px #aaaaaa;' onclick = 'choose_sex(1)')
+    #female(style='position:absolute;top:15%;left:10%;width:30%;box-shadow:inset 0 0 10px #aaaaaa;display:none' onclick = 'choose_sex(2)')
+    #weight(style='position:absolute;left:20%;width:60%')
+      #weight_title(style='float:left;position:absolute;') 体重(kg)：
+      input#weight_input(style='float:left;position:absolute;left:35%;width:70%')
+    #height(style='position:absolute;left:20%;width:60%')
+      #height_title(style='float:left;position:absolute;') 身高(cm)：
+      input#height_input(style='float:left;position:absolute;left:35%;width:70%')
+    button#submit(style='position:absolute;left:35%;width:30%') 确定
+  script.
+      window.onload = function () {
+          var window_height = document.all ? document.getElementsByTagName("html")[0].offsetHeight : window.innerHeight ;
+          var image_height = $("#choose_sex").height();
+          $("#male").css("height", image_height);
+          $("#female").css("height", image_height);
+          $("#weight").css("top", window_height * 0.25 + image_height);
+          $("#height").css("top", window_height * 0.25 + image_height + (window_height *0.7 - image_height)/4);
+          $("#submit").css("top", window_height * 0.25 + image_height + (window_height *0.7 - image_height)/4 * 3);
+      };
+
