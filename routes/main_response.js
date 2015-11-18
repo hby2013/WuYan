@@ -1,4 +1,4 @@
-var express = require('express');
+    var express = require('express');
 var wechat = require('wechat');
 var tools = require('./tools');
 var server = express.Router();
@@ -10,7 +10,7 @@ var config = {
     appid: tools.appid,
 }
 
-var ip_address = "59.66.139.113";
+var ip_address = "59.66.139.103"
 
 //database
 var mongo = require('mongodb');

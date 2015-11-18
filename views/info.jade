@@ -10,18 +10,29 @@ html
     meta(http-equiv='X-UA-Compatible', content='IE=edge,chrome=1')
     meta(name='HandheldFriendly', content='true')
   body(style='margin:0;padding:0;background-color:#eeeeee;font-family:微软雅黑')
+    input#open_id(style='display:none;' value="#{db_info.id}")
     img#choose_sex(src='/img/sex.png', style='position:absolute;width:100%;top:15%;')
-    #male(style='position:absolute;top:15%;left:54%;width:37%;box-shadow:inset 0 0 10px #aaaaaa;' onclick = 'choose_sex(1)')
-    #female(style='position:absolute;top:15%;left:10%;width:30%;box-shadow:inset 0 0 10px #aaaaaa;display:none' onclick = 'choose_sex(2)')
+    #male(style='position:absolute;top:15%;left:54%;width:37%;box-shadow:inset 0 0 10px #aaaaaa;')
+    #female(style='position:absolute;top:15%;left:10%;width:30%;')
     #weight(style='position:absolute;left:20%;width:60%')
       #weight_title(style='float:left;position:absolute;') 体重(kg)：
-      input#weight_input(style='float:left;position:absolute;left:35%;width:70%')
+      input#weight_input(style='float:left;position:absolute;left:35%;width:70%' value="#{db_info.weight}")
     #height(style='position:absolute;left:20%;width:60%')
       #height_title(style='float:left;position:absolute;') 身高(cm)：
-      input#height_input(style='float:left;position:absolute;left:35%;width:70%')
+      input#height_input(style='float:left;position:absolute;left:35%;width:70%' value="#{db_info.height}")
     button#submit(style='position:absolute;left:35%;width:30%') 确定
+    script(src='/js/info.js')
   script.
       window.onload = function () {
+          var checksex = "#{db_info.sex}";
+          if(checksex == "male"){
+            $('#male')[0].style.boxShadow = "inset 0 0 10px #aaaaaa";
+            $('#female')[0].style.boxShadow = "";
+          }
+          else{
+            $('#female')[0].style.boxShadow = "inset 0 0 10px #aaaaaa";
+            $('#male')[0].style.boxShadow = "";
+          }
           var window_height = document.all ? document.getElementsByTagName("html")[0].offsetHeight : window.innerHeight ;
           var image_height = $("#choose_sex").height();
           $("#male").css("height", image_height);
@@ -30,4 +41,3 @@ html
           $("#height").css("top", window_height * 0.25 + image_height + (window_height *0.7 - image_height)/4);
           $("#submit").css("top", window_height * 0.25 + image_height + (window_height *0.7 - image_height)/4 * 3);
       };
-

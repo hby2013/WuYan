@@ -59,7 +59,7 @@ message_module.send_walk_module = function(open_id, steps){
 
         "touser":open_id,
 
-        "template_id":"8oQdCR541Bn7soezK1fNU05ks8o8cZOrEc-DLSCUTk4",
+        "template_id":"M8Rqa49rku0CE5bXh-CxS5e8Q1zdmNKWKauVpZErz6U",
         "url":"http://weixin.qq.com/download",
 
         "topcolor":"green",
@@ -111,7 +111,7 @@ message_module.send_sleep_module = function(open_id, sleep){
 
         "touser":open_id,
 
-        "template_id":"fpa-6VQ6IGJTVRtfedAxvjOdAl57I7zsR3rbrNd35z4",
+        "template_id":"ySqnKLna6Z8rwRscEPQAfHolyFwI92w4MQFQqBqWerU",
         "url":"http://weixin.qq.com/download",
 
         "topcolor":"#FF0000",
