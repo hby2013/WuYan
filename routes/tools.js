@@ -4,11 +4,9 @@ var request = require("request");
 var fs = require("fs");
 var path = require("path");
 
-process.argv.forEach(function (val, index, array) {
-    tools.token = array[2];
-    tools.appid = array[3];
-    tools.appsec = array[4];
-}); 
+tools.token = "123456";
+tools.appid = "wxba11b761728df681";
+tools.appsec = "d4624c36b6795d1d99dcf0547af5443d"; 
 
 var custom_url = "https://api.weixin.qq.com/cgi-bin/message/custom/send"
 var device_url = "https://api.weixin.qq.com/device/"

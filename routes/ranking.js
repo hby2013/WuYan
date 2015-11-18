@@ -15,8 +15,8 @@ exports.ranking = function(db) {
                 {
                     list[i] = docs[i];
                 }
-				console.log(docs);
-				res.render('ranking_list');
+				console.log(list);
+				res.render('ranking_list', {list : list});
 			}
 			
 		})
