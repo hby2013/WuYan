@@ -18,6 +18,9 @@ exports.steps = function(db) {
 				steps.d5 = parseInt(docs[0].steps5);
 				steps.d6 = parseInt(docs[0].steps6);
 				steps.d7 = parseInt(docs[0].steps7);
+                steps.icon = docs[0].icon;
+                console.log(docs[0].icon);
+                steps.nickname = docs[0].nickname;
 				console.log(steps);
 				res.render('sport_statistics', {db_steps : steps});
 			}
