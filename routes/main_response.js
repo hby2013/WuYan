@@ -1,4 +1,4 @@
-    var express = require('express');
+var express = require('express');
 var wechat = require('wechat');
 var tools = require('./tools');
 var server = express.Router();
@@ -51,7 +51,7 @@ function query_steps_today(message, req, res, next) {
       if(docs.length == 0) {
         steps = parseInt(Math.random() * 20000);
         var icon = '';
-        get_icon_and_send_message(message, data_day, steps);
+        get_icon_and_send_message(message, data_day, steps, 1);
       } else {
         message_module.send_walk_module(message.FromUserName, docs[0].steps);
       }
@@ -68,15 +68,7 @@ function query_steps_week(message, req, res, next) {
         for(var i=0 ; i<7; i++) {
           steps[i] = parseInt(Math.random() * 20000);
         }
-        data_week.insert({"username":message.FromUserName, 
-                          "steps1":steps[0]+" ",
-                          "steps2":steps[1]+" ",
-                          "steps3":steps[2]+" ",
-                          "steps4":steps[3]+" ",
-                          "steps5":steps[4]+" ",
-                          "steps6":steps[5]+" ",
-                          "steps7":steps[6]+" "
-                        });
+        get_icon_and_send_message(message, data_week, steps, 2);
         var reply_msg = '';
         for(var i=0; i<7; i++) {
           reply_msg += steps[i];
@@ -115,7 +107,7 @@ function query_ranking(message, req, res, next) {
   res.reply('');
 }
 
-function get_icon_and_send_message(message, data_day, steps) {
+function get_icon_and_send_message(message, database, steps, mode) {
   var options = {
     hostname: 'api.weixin.qq.com',
     port: 443,
@@ -125,7 +117,8 @@ function get_icon_and_send_message(message, data_day, steps) {
 
   var access_token;
   var icon_url;
-
+  var nickname;
+  
   var req = https.request(options, function(res) {
     res.on('data', function(d) {
       access_token = eval('('+d+')').access_token;
@@ -139,8 +132,24 @@ function get_icon_and_send_message(message, data_day, steps) {
       var req1 = https.request(options1, function(res) {
         res.on('data', function(d) {
           icon_url = eval('('+d+')').headimgurl;
-          data_day.insert({"username":message.FromUserName, "steps":steps+"", "icon":icon_url});
-          message_module.send_walk_module(message.FromUserName, steps);
+          nickname = eval('('+d+')').nickname;
+          if(mode == 1){
+            database.insert({"username":message.FromUserName,"nickname": nickname,"steps":steps+"", "icon":icon_url});
+            message_module.send_walk_module(message.FromUserName, steps);
+          }
+          else{
+            database.insert({"username":message.FromUserName,
+                  "icon":icon_url,
+                  "nickname":nickname,
+                  "steps1":steps[0]+" ",
+                  "steps2":steps[1]+" ",
+                  "steps3":steps[2]+" ",
+                  "steps4":steps[3]+" ",
+                  "steps5":steps[4]+" ",
+                  "steps6":steps[5]+" ",
+                  "steps7":steps[6]+" "
+                });
+          }
         });
       });
       req1.end();

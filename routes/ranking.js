@@ -6,6 +6,7 @@ exports.ranking = function(db) {
 		var data_day = db.get('day');
 
 		data_day.find({}, function(err,docs) {
+            console.log(docs);
 			if(docs.length == 0) {
 				
 			} else {
@@ -15,10 +16,10 @@ exports.ranking = function(db) {
                 {
                     list[i] = docs[i];
                 }
+                list.sort(function(a,b){return parseInt(a.steps) < parseInt(b.steps)?1:-1})
 				console.log(list);
 				res.render('ranking_list', {list : list});
 			}
-			
 		})
 	}
 };

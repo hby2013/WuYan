@@ -6,8 +6,8 @@ body(style= "background-color:#eeeeee;overflow:hidden;margin:0px;padding:0px;fon
 		div#chart_title
 		canvas#myChart
 		div#header(style = "width:100%")
-			img#head_img(src= "/img/小鸟.jpg")
-			div#hello Hi,步行者~
+			img#head_img(src= "#{db_steps.icon}")
+			div#hello Hi,#{db_steps.nickname}~
 			div#statistic 过去一周，您累计步行
 				b(style = "font-size:1.5em;color:red") 123430步
 				
