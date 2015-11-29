@@ -23,3 +23,11 @@ exports.ranking = function(db) {
 		})
 	}
 };
+
+exports.get_ranking_info = function(db) {
+    var data_day = db.get('day');
+    data_day.find({}, function(err,docs) {
+        console.log(docs);
+        res.send(docs);
+    });
+};

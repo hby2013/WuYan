@@ -10,7 +10,7 @@ var config = {
     appid: tools.appid,
 }
 
-var ip_address = "59.66.139.103"
+var ip_address = "59.66.139.22";
 
 //database
 var mongo = require('mongodb');
@@ -20,6 +20,7 @@ var db = monk('localhost:27017/wechat');
 server.use(express.query());
 server.use('/', wechat(config).text(function(message, req, res, next){
   res.reply("text");
+  input_location(message);
 }).image(function(message, req, res, next){
   res.reply("image");
 }).voice(function(message, req, res, next){
@@ -40,12 +41,17 @@ server.use('/', wechat(config).text(function(message, req, res, next){
   }else if (req.weixin.Event == 'CLICK' && req.weixin.EventKey == 'ACHIEVEMENTS') {
     get_info(message, req, res, next);
   }else {
-	//get_info(message, req, res, next);
+	input_location(message);
   }
 }).middlewarify());
 
+function input_location(message){
+    var data = db.get('location');
+    get_icon_and_send_message(message, data, [], 3);
+}
+
 function query_steps_today(message, req, res, next) {
-  var data_day = db.get('day');
+    var data_day = db.get('day');
     var steps;
     data_day.find({"username":message.FromUserName}, function(err,docs) {
       if(docs.length == 0) {
@@ -60,7 +66,7 @@ function query_steps_today(message, req, res, next) {
 }
 
 function query_steps_week(message, req, res, next) {
-  var data_week = db.get('week');
+    var data_week = db.get('week');
     var steps = [];
     var url = "http://"+ip_address+"/steps/"+message.FromUserName;
     data_week.find({"username":message.FromUserName}, function(err,docs) {
@@ -97,65 +103,71 @@ function query_steps_week(message, req, res, next) {
 }
 
 function query_sleep_today(message, req, res, next) {
-  message_module.send_sleep_module(message.FromUserName, '7.5');
-  res.reply('');
+    message_module.send_sleep_module(message.FromUserName, '7.5');
+    res.reply('');
 }
 
 function query_ranking(message, req, res, next) {
-  var url = "http://"+ip_address+"/ranking/"+message.FromUserName;
-  tools.customSendArticle(message.FromUserName, "本日运动排行榜", "点击查看详细", "http://img.taopic.com/uploads/allimg/120410/9128-12041023430285.jpg", url);
-  res.reply('');
+    var url = "http://"+ip_address+"/ranking/"+message.FromUserName;
+    tools.customSendArticle(message.FromUserName, "本日运动排行榜", "点击查看详细", "http://img.taopic.com/uploads/allimg/120410/9128-12041023430285.jpg", url);
+    res.reply('');
 }
 
 function get_icon_and_send_message(message, database, steps, mode) {
-  var options = {
-    hostname: 'api.weixin.qq.com',
-    port: 443,
-    path: '/cgi-bin/token?grant_type=client_credential&appid='+tools.appid+'&secret='+tools.appsec,
-    method: 'GET'
-  };
-
-  var access_token;
-  var icon_url;
-  var nickname;
-  
-  var req = https.request(options, function(res) {
-    res.on('data', function(d) {
-      access_token = eval('('+d+')').access_token;
-      var options1 = {
+    var options = {
         hostname: 'api.weixin.qq.com',
         port: 443,
-        path: '/cgi-bin/user/info?access_token='+access_token+'&openid='+message.FromUserName+'&lang=zh_CN',
+        path: '/cgi-bin/token?grant_type=client_credential&appid='+tools.appid+'&secret='+tools.appsec,
         method: 'GET'
-      };
-
-      var req1 = https.request(options1, function(res) {
+    };
+    
+    var access_token;
+    var icon_url;
+    var nickname;
+    console.log(message);
+    var req = https.request(options, function(res) {
         res.on('data', function(d) {
-          icon_url = eval('('+d+')').headimgurl;
-          nickname = eval('('+d+')').nickname;
-          if(mode == 1){
-            database.insert({"username":message.FromUserName,"nickname": nickname,"steps":steps+"", "icon":icon_url});
-            message_module.send_walk_module(message.FromUserName, steps);
-          }
-          else{
-            database.insert({"username":message.FromUserName,
-                  "icon":icon_url,
-                  "nickname":nickname,
-                  "steps1":steps[0]+" ",
-                  "steps2":steps[1]+" ",
-                  "steps3":steps[2]+" ",
-                  "steps4":steps[3]+" ",
-                  "steps5":steps[4]+" ",
-                  "steps6":steps[5]+" ",
-                  "steps7":steps[6]+" "
-                });
-          }
+        access_token = eval('('+d+')').access_token;
+        var options1 = {
+            hostname: 'api.weixin.qq.com',
+            port: 443,
+            path: '/cgi-bin/user/info?access_token='+access_token+'&openid='+message.FromUserName+'&lang=zh_CN',
+            method: 'GET'
+        };
+    
+        var req1 = https.request(options1, function(res) {
+            res.on('data', function(d) {
+            icon_url = eval('('+d+')').headimgurl;
+            nickname = eval('('+d+')').nickname;
+            if(mode == 1){
+                database.insert({"username":message.FromUserName,"nickname": nickname,"steps":steps+"", "icon":icon_url});
+                message_module.send_walk_module(message.FromUserName, steps);
+            }
+            else if(mode == 2){
+                database.insert({"username":message.FromUserName,
+                    "icon":icon_url,
+                    "nickname":nickname,
+                    "steps1":steps[0]+" ",
+                    "steps2":steps[1]+" ",
+                    "steps3":steps[2]+" ",
+                    "steps4":steps[3]+" ",
+                    "steps5":steps[4]+" ",
+                    "steps6":steps[5]+" ",
+                    "steps7":steps[6]+" "
+                    });
+            }
+            else if(mode ==3){
+                database.insert({"username":message.FromUserName,
+                        "latitude":message.Latitude,
+                        "longitude":message.Longitude
+                    });
+            }
+            });
         });
-      });
-      req1.end();
+        req1.end();
+        });
     });
-  });
-  req.end();
+    req.end();  
 }
 
 function get_info(message, req, res, next){
