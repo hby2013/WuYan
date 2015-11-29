@@ -1,15 +1,25 @@
-userid = "";  //存储openid
+//需要传递的初始参数
+userid = #{userid};  //存储openid
+page_id = #{pageid}; //存储当前页面
+ip = #{ip};
+
+//其他参数，不用管
 list = [{icon:"icon1.jpg", userid:"123", name:"夏英达",steps:1234},
         {icon:"icon2.jpg", userid:"456", name:"范冰冰",steps:4567}];
-page_id = 0;     //存储当前页面
+
 search_result = list;
 has_bind_button = false;
-ip = "http://1234/";
+special_friend = {icon:"icon2.jpg", userid:"1341", name:"范冰冰", steps_today:4567, steps_week: [3777,2859,4123,9999,5432,2222,3000], sleep_yesterday:6};
 
 $(window).load(function(){
     $("nav li").css("color", "#8D8383");
     $(".selected").css("color", "#fff");
     $("nav li").click(switch_page);
+    if(page_id == 0){
+        request_friend_list();
+    } else if(page_id == 1) {
+        request_special_friend
+    }
     request_friend_list();
 });
 
@@ -22,6 +32,7 @@ function switch_page(){
         if(page_id!=0){
             $(".friend-list").empty();
             $("#search").css("display","none");
+            $("#special-friend").empty();
             page_id=0;
             switch_to_page0();
         }
@@ -33,6 +44,8 @@ function switch_page(){
     } else if($(this).attr("id")=="tag2"){
         if(page_id!=2){
             $(".friend-list").empty();
+            $("#special-friend").empty();
+            $("#search").css("display","none");
             page_id=2;
             switch_to_page2();
         }
@@ -50,7 +63,11 @@ function switch_to_page0(){
 }
 
 function switch_to_page1(){
-
+    $("#search").css("display","none");
+    $("#friend-list").css("display","none");
+    $("#special-friend").empty();
+    request_special_friend();
+    //show_special_friend(special_friend);
 }
 
 function switch_to_page2(){
@@ -64,6 +81,110 @@ function switch_to_page2(){
 function switch_to_page3(){
 
 };
+
+function request_special_friend(){
+    $("#special-friend").css("display","block");
+    var url = ip + "friends/special/";
+    $.get(url, {userid:userid}, function(result){
+        show_special_friend(friend);
+    });
+}
+
+function show_special_friend(friend){
+    var info_card = $("<section id='special-friend-info'><p id='special-friend-name'>"+friend.name+"</p><p id='special-friend-id'>账号："+friend.userid+"</p><img id='special-friend-icon' src='"+friend.icon+"'></section>");
+    $("#special-friend").append(info_card);
+    $("#special-friend-info").css({
+        "display": "-moz-box",
+        "display": "-webkit-box",
+        "display": "box",
+        "margin":"0 10px",
+        "padding":"15px 0 10px",
+        "border-bottom": "1px solid #f0f0f0",
+        "font-size": "18px",
+        "text-align":"justify",
+        "word-break": "break-all",
+        "background-color":"white"
+    });
+    $("#special-friend-name").css({
+        "position":"relative",
+        "left":"35%",
+        "top":"20%",
+        "color":"violet"
+    });
+    $("#special-friend-id").css({
+        "position":"relative",
+        "top":"60%",
+        "left":"35%"
+    });
+    $("#special-friend-icon").css({
+        "width": "100px",
+        "height": "100px",
+        "margin-left": "15px",
+        "overflow": "hidden",
+        "position":"absolute",
+        "top": $("#special-friend-info").offset().top + 20 + "px"
+    });
+
+    var sports_info = $("<div id='sports-info'><div id='chart_title'></div><canvas id='myChart'></canvas></div>");
+    $("#special-friend").append(sports_info);
+    $("#sports-info").css({
+        "display": "-moz-box",
+        "display": "-webkit-box",
+        "display": "box",
+        "margin":"10px 10px",
+        "padding":"15px 0 10px",
+        "border-bottom": "1px solid #f0f0f0",
+        "font-size": "18px",
+        "text-align":"justify",
+        "word-break": "break-all",
+        "background-color":"white"
+    });
+    show_chart(special_friend.steps_week);
+
+    var sports_text = $("<div id='sports-text'><h1>一周运动情况</h1><p>Ta一共走了53467步</p><p>快去和她一起约吧！</p></div>");
+    $("#sports-info").append(sports_text);
+    $("#sports-text").css({
+        "position":"absolute",
+        "left":"50%",
+        "top":$("#sports-info").offset().top + 20 + "px"
+    });
+}
+
+function show_chart(steps_week){
+    var data = {
+            labels : ["1","2","3","4","5","6","7"],
+            datasets : [
+            {
+                lineItemName : "test1",
+                fillColor : "rgba(220,220,220,0.5)",
+                strokeColor : "rgba(200,200,200,1)",
+                pointColor : "rgba(220,220,220,1)",
+                pointStrokeColor : "#fff",
+                data : steps_week
+            }
+            ]
+    };
+    $("#myChart").css({
+        "width":"80% !important"
+    });
+    $("chart_title").css({
+        "color":"black",
+        "width":"90%"
+    });
+    var window_height = document.all ? document.getElementsByTagName("html")[0].offsetHeight : window.innerHeight ;
+    var window_width = document.all ? document.getElementsByTagName("html")[0].offsetWidth : window.innerWidth ;
+    var width = window_height/50;
+    var chart_width = $("#myChart").width();
+    $("#myChart")[0].height = chart_width;
+    var chart_top= (window_height * 0.2 + (window_height * 0.8 - chart_width)/2);
+    $("#myChart").css("top", chart_top);
+    $("#chart_title").css("top", chart_top - 40);
+    var chartLine = null;          
+    var ctx = document.getElementById("myChart").getContext("2d");
+    chartLine = new Chart(ctx).Line(data);
+    initEvent(chartLine, clickCall);
+    
+}
 
 function request_friend_list(){
     var url = ip + "friends/friend_list/";
@@ -171,4 +292,31 @@ function show_search_result(search_result){
 function add_single_user(user){
     var usercard = $("<section class='user-card'><img class='friend-icon' src='"+user.icon+"'><p class='user-name'>"+user.name+"</p><button class='add-friend'>关注</button></section>");
     $(".user-list").append(usercard);
+}
+
+function clickCall(evt) {
+    var point = chartLine.getPointSingleAtEvent(evt);
+                    
+    if ( point !== null )
+        alert( point.label + ": " + point.lineItemName + " ____ " + point.value);
+}
+                
+function initEvent(chart, handler) {
+    var method = handler;
+    var eventType = "click";
+    var node = chart.chart.canvas;
+                                    
+    if (node.addEventListener) {
+        node.addEventListener(eventType, method);
+    } else if (node.attachEvent) {
+        node.attachEvent("on" + eventType, method);
+    } else {
+        node["on" + eventType] = method;
+    }
+}
+
+function convertCanvasToImage(canvas) {
+    var image = new Image();
+    image.src = canvas.toDataURL("/image/png");
+    return image;
 }
