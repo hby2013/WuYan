@@ -1,10 +1,9 @@
-userid = "";  //存储openid
-list = [{icon:"icon1.jpg", userid:"123", name:"夏英达",steps:1234},
-        {icon:"icon2.jpg", userid:"456", name:"范冰冰",steps:4567}];
-page_id = 0;     //存储当前页面
+var userid = window.userid;  //存储openid
+list = [];
+page_id = 2;     //存储当前页面 0: 关注 1：特别关注 2：搜索 3 ：消息列表
 search_result = list;
 has_bind_button = false;
-ip = "http://1234/";
+ip = "http://101.5.96.59/";
 
 $(window).load(function(){
     $("nav li").css("color", "#8D8383");
@@ -54,6 +53,7 @@ function switch_to_page1(){
 }
 
 function switch_to_page2(){
+    alert("page2");
     $("#search").css("display","block");
     if(!has_bind_button){
         $("#search-button").click(click_search_button);
@@ -66,23 +66,55 @@ function switch_to_page3(){
 };
 
 function request_friend_list(){
-    var url = ip + "friends/friend_list/";
+    var data = {"userid":userid};
+    $.ajax({
+        type:'post',
+        url:"/attention/friend_list/",
+        data:data,
+        dataType:"json",
+        success:function(data){
+            if(data){
+                show_friend_list(data);
+            } else{
+                alert("返回值为空");
+            }
+        }
+    });
+    /*var url = ip + "friends/friend_list/";
     $.get(url, {userid:userid},function(result){
         show_friend_list(result);
-    });
+    }); //req.params.userid  //res.send()
+    */
 }
 
+
 function click_search_button(){
+    //alert(userid);
     var request_name = $("input").val();
-    request_serach_result(request_name);
+    request_search_result(request_name);
     //show_search_result(search_result);
 }
 
 function request_search_result(info){
-    var url = ip + "friends/search/";
-    $.get(url, {content:info, userid:userid},function(result){
-        show_search_result(result);
+    //alert(userid);
+    var data = {"receiver":info, "userid":userid};
+    //alert(data);
+    $.ajax({
+        type:'post',
+        url:"/attention/search/",
+        data:data,
+        dataType:"json",
+        success:function(data){
+            if(data){
+                alert(data.info);
+            } else{
+                alert("返回值为空");
+            }
+        }
     });
+    /*$.post(url, {receiver:info, userid:userid},function(result){
+        show_search_result(result);
+    });*/
 }
 
 function request_special_friend(){
@@ -94,6 +126,7 @@ function request_messages(){
 }
 
 function show_friend_list(list){
+    //alert(list.length);
     for(var i=0; i<list.length; i++){
         add_single_friend(list[i]);
     }
@@ -120,7 +153,7 @@ function show_friend_list(list){
 }
 
 function add_single_friend(friend){
-    var friendcard = $("<section class='friend-card'><img class='friend-icon' src='"+friend.icon+"'><p class='friend-name'>"+friend.name+"</p><br><p class='steps-today'>今日运动："+friend.steps+"步</p></section>");
+    var friendcard = $("<section class='friend-card'><img class='friend-icon' src='"+friend.icon+"'><p class='friend-name'>"+friend.nickname+"</p><br><p class='steps-today'>今日运动："+friend.distance+"米</p></section>");
     $(".friend-list").append(friendcard);
 }
 

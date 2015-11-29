@@ -4,8 +4,8 @@ var request = require("request");
 var fs = require("fs");
 var path = require("path");
 
-tools.token = "123456";
-tools.appid = "wxba11b761728df681";
+tools.token = "hby13";
+tools.appid = "wx04f3330c621e1dec";
 tools.appsec = "d4624c36b6795d1d99dcf0547af5443d"; 
 
 var custom_url = "https://api.weixin.qq.com/cgi-bin/message/custom/send"

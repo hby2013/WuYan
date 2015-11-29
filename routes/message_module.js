@@ -15,8 +15,8 @@ var options = {
 };
 
 var req = https.request(options, function(res) {
-  console.log("statusCode: ", res.statusCode);
-  console.log("headers: ", res.headers);
+  //console.log("statusCode: ", res.statusCode);
+  //console.log("headers: ", res.headers);
 
   res.on('data', function(d) {
     //process.stdout.write(d);
@@ -59,7 +59,7 @@ message_module.send_walk_module = function(open_id, steps){
 
         "touser":open_id,
 
-        "template_id":"M8Rqa49rku0CE5bXh-CxS5e8Q1zdmNKWKauVpZErz6U",
+        "template_id":"8oQdCR541Bn7soezK1fNU05ks8o8cZOrEc-DLSCUTk4",
         "url":"http://weixin.qq.com/download",
 
         "topcolor":"green",
@@ -81,7 +81,7 @@ message_module.send_walk_module = function(open_id, steps){
   
 	
     var data = JSON.stringify(model_info);
-    console.log(data);  
+    //console.log(data);  
 
     var opt = {  
         method: "POST",  
@@ -111,7 +111,7 @@ message_module.send_sleep_module = function(open_id, sleep){
 
         "touser":open_id,
 
-        "template_id":"ySqnKLna6Z8rwRscEPQAfHolyFwI92w4MQFQqBqWerU",
+        "template_id":"fpa-6VQ6IGJTVRtfedAxvjOdAl57I7zsR3rbrNd35z4",
         "url":"http://weixin.qq.com/download",
 
         "topcolor":"#FF0000",

@@ -3,14 +3,14 @@ var wechat = require('wechat');
 var tools = require('./tools');
 var server = express.Router();
 var message_module = require('./message_module');
+var attention = require('./attention');
 var https = require('https'); 
-
 var config = {
     token: tools.token,
     appid: tools.appid,
 }
 
-var ip_address = "59.66.139.103"
+var ip_address = "59.66.139.99";
 
 //database
 var mongo = require('mongodb');
@@ -19,7 +19,8 @@ var db = monk('localhost:27017/wechat');
 
 server.use(express.query());
 server.use('/', wechat(config).text(function(message, req, res, next){
-  res.reply("text");
+  //console.log(message.Content);
+  response_text(message, req, res, next);
 }).image(function(message, req, res, next){
   res.reply("image");
 }).voice(function(message, req, res, next){
@@ -30,6 +31,7 @@ server.use('/', wechat(config).text(function(message, req, res, next){
   res.reply("link");
 }).event(function(message, req, res, next){
   if(req.weixin.Event == 'CLICK' && req.weixin.EventKey == 'WALK_TODAY') {
+    console.log("click");
     query_steps_today(message, req, res, next);
   } else if (req.weixin.Event == 'CLICK' && req.weixin.EventKey == 'WALK_WEEK') {
     query_steps_week(message, req, res, next);
@@ -37,12 +39,35 @@ server.use('/', wechat(config).text(function(message, req, res, next){
     query_sleep_today(message, req, res, next);
   } else if (req.weixin.Event == 'CLICK' && req.weixin.EventKey == 'RANKING') {
     query_ranking(message, req, res, next);
+  }else if (req.weixin.Event == 'CLICK' && req.weixin.EventKey == 'ATTENTION') {
+    query_attention(message, req, res, next);
   }else if (req.weixin.Event == 'CLICK' && req.weixin.EventKey == 'ACHIEVEMENTS') {
     get_info(message, req, res, next);
   }else {
 	//get_info(message, req, res, next);
   }
 }).middlewarify());
+
+function response_text(message, req, res, next){
+  var my_text = message.Content;
+  var sender_no = parseInt(my_text.substring(0,my_text.length-1));
+  //console.log(sender_no);
+  if(my_text.length > 1 && (attention.meg_tags())[sender_no] == 0){
+    //console.log("attention");
+    if(my_text.substring(my_text.length-1,my_text.length)=="y"){
+      var response = "'"+(attention.receiver_nicknames())[sender_no]+"'同意了你的关注";
+      tools.customSendText((attention.senders())[sender_no],response);
+      attention.set_meg_tags(sender_no, 1);
+      attention.insert_attentionship(sender_no);
+    }
+    else if(my_text.substring(my_text.length-1,my_text.length)=="n"){
+      var response = "'"+(attention.receiver_nicknames())[sender_no]+"'拒绝了你的关注";
+      tools.customSendText((attention.senders())[sender_no],response);
+      attention.set_meg_tags(sender_no, 1);
+    }
+  }
+  res.reply("");
+}
 
 function query_steps_today(message, req, res, next) {
   var data_day = db.get('day');
@@ -104,6 +129,12 @@ function query_sleep_today(message, req, res, next) {
 function query_ranking(message, req, res, next) {
   var url = "http://"+ip_address+"/ranking/"+message.FromUserName;
   tools.customSendArticle(message.FromUserName, "本日运动排行榜", "点击查看详细", "http://img.taopic.com/uploads/allimg/120410/9128-12041023430285.jpg", url);
+  res.reply('');
+}
+
+function query_attention(message, req, res, next) {
+  var url = "http://"+ip_address+"/attention/"+message.FromUserName;
+  tools.customSendArticle(message.FromUserName, "我的关注", "点击查看详细", "http://img.taopic.com/uploads/allimg/120410/9128-12041023430285.jpg", url);
   res.reply('');
 }
 

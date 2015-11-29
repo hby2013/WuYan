@@ -9,8 +9,10 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var query_steps = require('./routes/steps');
 var query_ranking = require('./routes/ranking');
+var attention = require('./routes/attention');
 var wechat = require('./routes/main_response');
-var info = require('./routes/info')
+var info = require('./routes/info');
+var database = require('./routes/database');
 var app = express();
 
 //database
@@ -38,9 +40,13 @@ app.get(/steps/, query_steps.steps(db));
 
 //check ranking
 app.get(/ranking/, query_ranking.ranking(db));
+app.get(/attention/, attention.attention(db));
 app.get(/info/, info.info(db));
 app.post('/logging',info.logging_finished(db)); 
+app.post('/attention/search/',attention.rev_meg(db)); 
+app.post('/attention/friend_list/',attention.rev_friend_list(db)); 
 //app.post('/logging',info.logging(db)); 
+//database.adduser(db);
 
 app.listen(80);
 

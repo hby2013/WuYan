@@ -7,10 +7,12 @@ html
     meta(name='apple-mobile-web-app-capable', ,='', content='yes')
     meta(content='telephone=no', name='format_detection')
     link(rel='stylesheet', type='text/css', href='/css/friends.css')
-    script(type='text/javascript', src='/js/jquery.js')
+    script(type='text/javascript', src='/js/jquery-1.11.1.js')
     script(type='text/javascript', src='/js/friends.js')
+    script.
+        window.userid = !{JSON.stringify(userid)};
   body
-    div#wrapper(stle='margin-top:0.5rem; margin-left:0; margin-right: 0; overflow: hidden; min-height:640px;')
+    div#wrapper(style='margin-top:0.5rem; margin-left:0; margin-right: 0; overflow: hidden; min-height:640px;')
       nav.header(style='position: fixed; width:100%; top:0.5rem; left:0; z-index:199; -webkit-transform: translateZ(0); -webkit-box-sizing:border-box;')
         li#tag0.selected
           a &#x5173;&#x6CE8;
@@ -25,3 +27,4 @@ html
         input(type='text', placeholder='enter username')
         button#search-button Search
         section.user-list
+      div#mask

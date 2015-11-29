@@ -44,7 +44,7 @@ exports.logging_finished = function(db) {
         var weight = req.body.weight;
         var height = req.body.height;
         info.find({"username":username}, function(err,docs) {
-            console.log("length:"+docs.length);
+            //console.log("length:"+docs.length);
 			if(docs.length == 0) {
                 collection.insert({"username":username,"sex":sex, "height":height,"weight":weight});
                 res.render('info_finished');
