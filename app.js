@@ -39,7 +39,8 @@ app.get(/steps/, query_steps.steps(db));
 //check ranking
 app.get(/ranking/, query_ranking.ranking(db));
 app.get(/info/, info.info(db));
-//app.get('/get_ranking_info', query_ranking.get_ranking_info(db));
+
+app.get('/json',query_ranking.get_ranking_info(db)); 
 app.post('/logging',info.logging_finished(db)); 
 //app.post('/logging',info.logging(db)); 
 

@@ -6,18 +6,15 @@ exports.ranking = function(db) {
 		var data_day = db.get('day');
 
 		data_day.find({}, function(err,docs) {
-            console.log(docs);
 			if(docs.length == 0) {
 				
 			} else {
                 var list = [];
-                console.log(docs[0]);
                 for(var i = 0; i < docs.length; i++)
                 {
                     list[i] = docs[i];
                 }
-                list.sort(function(a,b){return parseInt(a.steps) < parseInt(b.steps)?1:-1})
-				console.log(list);
+                list.sort(function(a,b){return parseInt(a.steps) < parseInt(b.steps)?1:-1});
 				res.render('ranking_list', {list : list});
 			}
 		})
@@ -25,9 +22,14 @@ exports.ranking = function(db) {
 };
 
 exports.get_ranking_info = function(db) {
-    var data_day = db.get('day');
-    data_day.find({}, function(err,docs) {
-        console.log(docs);
-        res.send(docs);
-    });
+    return function(req, res) {
+        console.log("adhfkjdsahfkjhdsakjfhsakjfha");
+        var data_day = db.get('day');
+        data_day.find({}, function(err,docs) {
+            console.log(docs);
+            console.log(JSON.stringify(docs));
+            console.log("I want to send something")
+            res.send(JSON.stringify(docs));
+        });
+    }
 };

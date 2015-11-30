@@ -10,7 +10,7 @@ var config = {
     appid: tools.appid,
 }
 
-var ip_address = "59.66.139.22";
+var ip_address = "59.66.139.230";
 
 //database
 var mongo = require('mongodb');

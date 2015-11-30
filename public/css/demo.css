@@ -1,7 +1,6 @@
 #myChart{
     position:absolute;
     top:10%;
-    left:25%;
-    width:50% !important;
+    width:100% !important;
     font-family:微软雅黑;
 }
