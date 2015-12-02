@@ -11,6 +11,8 @@ search_result = list;
 has_bind_button = false;
 special_friend = {icon:"icon2.jpg", userid:"1341", name:"范冰冰", steps_today:4567, steps_week: [3777,2859,4123,9999,5432,2222,3000], sleep_yesterday:6};
 
+var current_click_id = 0;
+
 $(window).load(function(){
     $("nav li").css("color", "#8D8383");
     $(".selected").css("color", "#fff");
@@ -18,9 +20,8 @@ $(window).load(function(){
     if(page_id == 0){
         request_friend_list();
     } else if(page_id == 1) {
-        request_special_friend
+        request_special_friend();
     }
-    request_friend_list();
 });
 
 function switch_page(){
@@ -78,9 +79,6 @@ function switch_to_page2(){
     }
 }
 
-function switch_to_page3(){
-
-};
 
 function request_special_friend(){
     $("#special-friend").css("display","block");
@@ -206,14 +204,6 @@ function request_search_result(info){
     });
 }
 
-function request_special_friend(){
-
-}
-
-function request_messages(){
-
-}
-
 function show_friend_list(list){
     for(var i=0; i<list.length; i++){
         add_single_friend(list[i]);
@@ -276,15 +266,17 @@ function show_search_result(search_result){
         "top":"30%",
         "left":"60%",
         "border-radius":"3px",
-        "background-color":"blue",
+        "background-color":"74a12d",
         "color":"white",
-        "font-size":"15px"
+        "font-size":"18px"
     });
     var button_add = $(".add-friend");
     for(var i=0; i<button_add.length; i++){
         var url = ip + "friend/add/";
         $(button_add[i]).click(function(){
-            $.get(url, {userid:userid, friendid:search_result[i].userid});
+            current_click_id = search_result[i].userid;
+            $("#mask").css({"display":"block"});
+            //$.get(url, {userid:userid, friendid:search_result[i].userid});
         })
     }
 }
