@@ -7,6 +7,9 @@ var page_id = 0; //存储当前页面
 list = [{icon:"icon1.jpg", userid:"123", nickname:"夏英达",steps:1234},
         {icon:"icon2.jpg", userid:"456", nickname:"范冰冰",steps:4567}];
 
+special_friend = {icon:"icon2.jpg", userid:"1341", name:"范冰冰", steps_today:4567, steps_week: [3777,2859,4123,9999,5432,2222,3000], sleep_yesterday:6};
+
+
 search_result = list;
 has_bind_button = false;
 
@@ -19,7 +22,6 @@ $(window).load(function(){
     if(page_id == 0){
         request_friend_list();
     } else if(page_id == 1) {
-        request_special_friend
     }
     //request_friend_list();
 });
@@ -114,7 +116,7 @@ function convert_data(basic_list, day_data_list){
 }
 
 function show_special_friend(friend){
-    var info_card = $("<section id='special-friend-info'><p id='special-friend-name'>"+friend.name+"</p><p id='special-friend-id'>账号："+friend.userid+"</p><img id='special-friend-icon' src='"+friend.icon+"'></section>");
+    var info_card = $("<section id='special-friend-info'><img id='special-friend-icon' src='"+friend.icon+"'><p id='special-friend-name'>"+friend.name+"</p><p id='special-friend-id'>账号："+friend.userid+"</p></section>");
     $("#special-friend").append(info_card);
     $("#special-friend-info").css({
         "display": "-moz-box",
@@ -130,14 +132,14 @@ function show_special_friend(friend){
     });
     $("#special-friend-name").css({
         "position":"relative",
-        "left":"35%",
+        "left":"40%",
         "top":"20%",
         "color":"violet"
     });
     $("#special-friend-id").css({
         "position":"relative",
         "top":"60%",
-        "left":"35%"
+        "left":"40%"
     });
     $("#special-friend-icon").css({
         "width": "100px",
@@ -145,10 +147,34 @@ function show_special_friend(friend){
         "margin-left": "15px",
         "overflow": "hidden",
         "position":"absolute"
-        //"top": $("#special-friend-info").offset().top + 20 + "px"
     });
 
-    var sports_info = $("<div id='sports-info'><div id='chart_title'></div><canvas id='myChart'></canvas></div>");
+    var sports_basic = $("<div id='sports-text'><img src='/img/sleep.jpg' class='img_walk'><div id='text-sleep'>昨日睡眠: "+friend.sleep_yesterday+"小时</div><img src='/img/walk.jpg' class='img_walk'><div id='text-walk'>今日步行: "+friend.steps_today+"步</div></div>");
+    $("#special-friend").append(sports_basic);
+    $(".img_walk").css({
+        "width": "25px",
+        "height": "25px",
+        "margin-left": "10px",
+        "overflow": "hidden",
+        "position":"absolute"
+    });
+    $("#text-sleep").css({"margin-left":"40px"});
+    $("#text-walk").css({"margin-left":"40px"});
+    $("#sports-text").css({
+        "display": "-moz-box",
+        "display": "-webkit-box",
+        "display": "box",
+        "margin":"10px 10px",
+        "padding":"15px 0 10px",
+        "border-bottom": "1px solid #f0f0f0",
+        "font-size": "18px",
+        "text-align":"justify",
+        "word-break": "break-all",
+        "background-color":"white"
+        //"top":$("#sports-info").offset().top + 20 + "px"
+    });
+
+    var sports_info = $("<div id='sports-info'><div id='chart_title'>本周运动趋势图</div><canvas id='myChart'></canvas></div>");
     $("#special-friend").append(sports_info);
     $("#sports-info").css({
         "display": "-moz-box",
@@ -164,13 +190,8 @@ function show_special_friend(friend){
     });
     show_chart(friend.steps_week);
 
-    var sports_text = $("<div id='sports-text'><h1>一周运动情况</h1><p>Ta一共走了53467步</p><p>快去和她一起约吧！</p></div>");
-    $("#sports-info").append(sports_text);
-    $("#sports-text").css({
-        "position":"absolute",
-        "left":"50%"
-        //"top":$("#sports-info").offset().top + 20 + "px"
-    });
+    
+
 }
 
 function show_chart(steps_week){
@@ -190,9 +211,10 @@ function show_chart(steps_week){
     $("#myChart").css({
         "width":"80% !important"
     });
-    $("chart_title").css({
+    $("#chart_title").css({
         "color":"black",
-        "width":"90%"
+        "width":"90%",
+        "text-align":"center"
     });
     var window_height = document.all ? document.getElementsByTagName("html")[0].offsetHeight : window.innerHeight ;
     var window_width = document.all ? document.getElementsByTagName("html")[0].offsetWidth : window.innerWidth ;
@@ -301,7 +323,7 @@ function show_search_result(search_result){
         "margin":"0 10px",
         "padding":"15px 0 10px",
         "border-bottom": "1px solid #f0f0f0",
-        "font-size": "18px",
+        "font-size": "20px",
         "text-align":"justify",
         "word-break": "break-all",
         "background-color":"white"
@@ -314,30 +336,30 @@ function show_search_result(search_result){
     });
     $(".user-name").css({
                         "color":"violet",
-                        "float":"right"
+                        "position":"absolute",
+                        "left":"40%"
                     });
     $(".add-friend").css({
         "position":"relative",
-        "top":"30%",
-        "left":"60%",
+        "top":"10%",
+        "left":"70%",
         "border-radius":"3px",
-        "background-color":"74a12d",
+        "background-color":"#74a12d",
         "color":"white",
-        "font-size":"18px"
+        "font-size":"18px",
+        "width":"80px",
+        "height":"40px"
     });
     var button_add = $(".add-friend");
     for(var i=0; i<button_add.length; i++){
-        var url = ip + "friend/add/";
         $(button_add[i]).click(function(){
             current_click_id = search_result[i].userid;
-            $("#mask").css({"display":"block"});
-            //$.get(url, {userid:userid, friendid:search_result[i].userid});
         })
     }
 }
 
 function add_single_user(user){
-    var usercard = $("<section class='user-card'><img class='friend-icon' src='"+user.icon+"'><p class='user-name'>"+user.name+"</p><button class='add-friend'>关注</button></section>");
+    var usercard = $("<section class='user-card'><img class='friend-icon' src='"+user.icon+"'><span class='user-name'>"+user.nickname+"</span><button class='add-friend'>关注</button></section>");
     $(".user-list").append(usercard);
 }
 
