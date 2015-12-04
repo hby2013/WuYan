@@ -3,13 +3,16 @@ var API = require("wechat-api");
 var request = require("request");
 var fs = require("fs");
 var path = require("path");
+var https = require('https'); 
 
 tools.token = "hby13";
 tools.appid = "wx04f3330c621e1dec";
 tools.appsec = "d4624c36b6795d1d99dcf0547af5443d"; 
+tools.ip = "127.0.0.1";
+tools.access_token = "";
 
-var custom_url = "https://api.weixin.qq.com/cgi-bin/message/custom/send"
-var device_url = "https://api.weixin.qq.com/device/"
+var custom_url = "https://api.weixin.qq.com/cgi-bin/message/custom/send";
+var device_url = "https://api.weixin.qq.com/device/";
 var access_token = "";
 var latest_time = 0;
 
@@ -41,6 +44,34 @@ var postJSON = function(data){
 	}
    };
 };
+
+
+tools.get_access_token = function(){
+  var options = {
+    hostname: 'api.weixin.qq.com',
+    port: 443,
+    path: '/cgi-bin/token?grant_type=client_credential&appid='+tools.appid+'&secret='+tools.appsec,
+    method: 'GET'
+  };
+
+  var req = https.request(options, function(res) {
+  //console.log("statusCode: ", res.statusCode);
+  //console.log("headers: ", res.headers);
+
+    res.on('data', function(d) {
+    //process.stdout.write(d);
+    //var ss = d;
+      tools.access_token = eval('('+d+')').access_token;
+      //console.log(tools.access_token);
+    });
+  });
+  req.end();
+
+  req.on('error', function(e) {
+    console.error(e);
+  });
+}
+
 
 tools.menuCreate = function(menu, callback){
     api.createMenu(menu, callback);

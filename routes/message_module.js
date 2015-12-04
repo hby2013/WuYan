@@ -5,30 +5,7 @@ var tools = require('./tools');
 var server = express.Router();
 var https = require('https'); 
 
-var access_token;
-
-var options = {
-  hostname: 'api.weixin.qq.com',
-  port: 443,
-  path: '/cgi-bin/token?grant_type=client_credential&appid='+tools.appid+'&secret='+tools.appsec,
-  method: 'GET'
-};
-
-var req = https.request(options, function(res) {
-  //console.log("statusCode: ", res.statusCode);
-  //console.log("headers: ", res.headers);
-
-  res.on('data', function(d) {
-    //process.stdout.write(d);
-    //var ss = d;
-    access_token = eval('('+d+')').access_token;
-  });
-});
-req.end();
-
-req.on('error', function(e) {
-  console.error(e);
-});
+tools.get_access_token();
 
 function getNowFormatDate() {
     var date = new Date();
@@ -86,7 +63,7 @@ message_module.send_walk_module = function(open_id, steps){
     var opt = {  
         method: "POST",  
         host: "api.weixin.qq.com",    
-        path: "/cgi-bin/message/template/send?access_token=" + access_token,  
+        path: "/cgi-bin/message/template/send?access_token=" + tools.access_token,  
         headers: {  
             "Content-Type": 'application/json',  
             "Content-Length": data.length  
@@ -127,12 +104,12 @@ message_module.send_sleep_module = function(open_id, sleep){
     };
   
     var data = JSON.stringify(model_info);
-    console.log(data);  
+    //console.log(data);  
 
     var opt = {  
         method: "POST",  
         host: "api.weixin.qq.com",    
-        path: "/cgi-bin/message/template/send?access_token=" + access_token,  
+        path: "/cgi-bin/message/template/send?access_token=" + tools.access_token,  
         headers: {  
             "Content-Type": 'application/json',  
             "Content-Length": data.length  
