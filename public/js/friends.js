@@ -28,6 +28,25 @@ $(window).load(function(){
         request_friend_list();
     } else if(page_id == 1) {
     }
+    $("#left-arrow").css({
+        "top":$(window).height()/2-30 + "px",
+        "left":"0px",
+        "margin-left":"0px"
+    });
+    $("#right-arrow").css({
+        "top":$(window).height()/2-30 + "px",
+        "left":$(window).width()-55 + "px"
+    });
+    $("#left-arrow").click(function(){
+        current_special_friend--;
+        show_special_friend(special_friends[current_special_friend-1]);
+        display_arrow(special_friends.length);
+    });
+    $("#right-arrow").click(function(){
+        current_special_friend++;
+        show_special_friend(special_friends[current_special_friend-1]);
+        display_arrow(special_friends.length);
+    });
     //request_friend_list();
 });
 
@@ -36,6 +55,8 @@ function switch_page(){
     $("nav li").attr("class", "");
     $(this).attr("class","selected");
     $(this).css("color", "#fff");
+    $("#left-arrow").css("display","block");
+    $("#right-arrow").css("display","none");
     if($(this).attr("id")=="tag0"){
         if(page_id!=0){
             $(".friend-list").empty();
@@ -75,7 +96,7 @@ function switch_to_page1(){
     $("#friend-list").css("display","none");
     $("#special-friend").empty();
     request_special_friend();
-    //choose_special_friend(special_friend);
+    //choose_special_friend(special_friends);
 }
 
 function switch_to_page2(){
@@ -122,11 +143,14 @@ function convert_data(basic_list, day_data_list){
 }
 
 function choose_special_friend(friend){
-    $("#buttons-special-friend").remove();
-    var buttons_special_friend = $("<div id='buttons-special-friend'></div>");
-    $("#special-friend").append(buttons_special_friend);
+    //$("#buttons-special-friend").remove();
+    //var buttons_special_friend = $("<div id='buttons-special-friend'></div>");
+    //$("#special-friend").append(buttons_special_friend);
     var num_special_friend = friend.length;
-    if(friend.length != 1) {
+    current_special_friend = 1;
+    display_arrow(num_special_friend);
+    /*
+    if(num_special_friend) {
         for(var i=0; i<num_special_friend; i++) {
             var single_button = $("<button class='but-special' id='but-special"+i+"'>"+friend[i].name+"</button>");
             $("#buttons-special-friend").append(single_button);
@@ -135,7 +159,8 @@ function choose_special_friend(friend){
                 show_special_friend(special_friend[num]);
             });
         }
-    }
+    }*/
+    /*
     $(".but-special").css({
         "background" : "-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9))",
         "background-color":"#f9f9f9",
@@ -149,8 +174,25 @@ function choose_special_friend(friend){
     });
     $("#buttons-special-friend").css({
         "margin":"10px 10px"
-    });
-    show_special_friend(friend[current_special_friend]);
+    });*/
+    show_special_friend(friend[current_special_friend-1]);
+}
+
+function display_arrow(friend_num){
+    if(friend_num<=1){
+        $("#left-arrow").css("display","none");
+        $("#right-arrow").css("display","none");
+    }
+
+    if(current_special_friend < friend_num){
+        $("#left-arrow").css("display","none");
+        $("#right-arrow").css("display","block");
+    }
+
+    if(current_special_friend > 1){
+        $("#left-arrow").css("display","block");
+        $("#right-arrow").css("display","none");
+    }
 }
 
 function show_special_friend(friend){
