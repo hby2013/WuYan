@@ -4,190 +4,56 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>附近的人</title>  
     <!--css-->  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
     <link href="css/demo.css" rel="stylesheet" type="text/css" />  
     <!--javascript-->  
-    <script src="js/jquery.js" type="text/javascript"></script>  
-    <script src="scripts/demo.js" type="text/javascript"></script>  
+    <script src="js/jquery.js" type="text/javascript"></script>   
     <script src="js/Chart-1.0.1-beta.4.js"></script>
     <script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script>
     <!--<script type="text/javascript" src="js/transmore.js"></script>-->
+    <script src="js/jquery.js"></script>
+    <script src="js/mobiscroll_002.js" type="text/javascript"></script>
+	<script src="js/mobiscroll_004.js" type="text/javascript"></script>
+	<link href="css/mobiscroll_002.css" rel="stylesheet" type="text/css">
+	<link href="css/mobiscroll.css" rel="stylesheet" type="text/css">
+	<script src="js/mobiscroll.js" type="text/javascript"></script>
+	<script src="js/mobiscroll_003.js" type="text/javascript"></script>
+	<script src="js/mobiscroll_005.js" type="text/javascript"></script>
+	<link href="css/mobiscroll_003.css" rel="stylesheet" type="text/css">
+    <script src="js/map.js" type="text/javascript"></script>
 </head>  
-<body style = "margin:0;padding:0;background-color:#eeeeee">  
+<body style = "margin:0;padding:0;background-color:#eeeeee;font-family:微软雅黑">  
     <div class="demo_main">   
         <div class="demo_content">  
-            <div style="position:absolute;min-height: 50%; width: 100%;" id="map">  
-            </div> 
-            <script type="text/javascript">  
-                var ip_address = "59.66.136.86";
-                var markerArr = [  
-                    { nickname: "夏英达", point: "116.320786,40.008045", icon:"img/head2.jpg",data:[28,48,40,70,23,34]},  
-                    { nickname: "雨田或", point: "116.3170934,40.0093401", icon:"img/head3.jpg", data:[28,18,30,30,13,24]},  
-                    { nickname: "池婧雯", point: "116.3212213,40.0107267", icon:"img/head4.jpg", data:[28,28,20,10,33,54]},  
-                    { nickname: "谢宇辰", point: "116.3272867,40.0104274", icon:"img/head5.jpg", data:[28,38,10,20,13,44]},
-                ];  
-                var data = {
-                    labels : ["周运动时间","当天运动时间","周步数","当天步数","周卡路里","当天卡路里"],
-                    datasets : [
-                        {
-                            fillColor : "rgba(220,220,220,0.5)",
-                            strokeColor : "rgba(220,220,220,1)",
-                            pointColor : "rgba(220,220,220,1)",
-                            pointStrokeColor : "#fff",
-                            data : [28,48,40,70,23,34]
-                        },
-                        {
-                            fillColor : "rgba(151,187,205,0.5)",
-                            strokeColor : "rgba(151,187,205,1)",
-                            pointColor : "rgba(151,187,205,1)",
-                            pointStrokeColor : "#fff",
-                            data : [28,18,30,30,13,24]
-                        }
-                    ]
-                };
-                var map;
-                var point;
-                var current_point = 0;
-                var can_continue = true;
-                function map_init() {  
-                    map = new BMap.Map("map"); // 创建Map实例  
-                    var point = new BMap.Point(116.320786,40.008045); 
-                    map.centerAndZoom(point, 18); // 初始化地图,设置中心点坐标和地图级别。  
-                    
-                    map.enableScrollWheelZoom(true); //启用滚轮放大缩小  
-                    //向地图中添加缩放控件  
-                    var ctrlNav = new window.BMap.NavigationControl({  
-                        anchor: BMAP_ANCHOR_TOP_LEFT,  
-                        type: BMAP_NAVIGATION_CONTROL_LARGE  
-                    });  
-                    map.addControl(ctrlNav);  
-                    
-                    //向地图中添加缩略图控件  
-                    var ctrlOve = new window.BMap.OverviewMapControl({  
-                        anchor: BMAP_ANCHOR_BOTTOM_RIGHT,  
-                        isOpen: 1  
-                    });  
-                    map.addControl(ctrlOve);  
-                    
-                    //向地图中添加比例尺控件  
-                    var ctrlSca = new window.BMap.ScaleControl({  
-                        anchor: BMAP_ANCHOR_BOTTOM_LEFT  
-                    });  
-                    map.addControl(ctrlSca);  
-                    var marker = new Array(); //存放标注点对象的数组  
-                    var info = new Array(); //存放提示信息窗口对象的数组 
-                    current_point = 0;
-                    point = new Array(); //存放标注点经纬信息的数组  
-                    for (var i = 0; i < markerArr.length; i++) {  
-                        var p0 = markerArr[i].point.split(",")[0]; //  
-                        var p1 = markerArr[i].point.split(",")[1]; //按照原数组的point格式将地图点坐标的经纬度分别提出来  
-                        point[i] = new window.BMap.Point(p0, p1); //循环生成新的地图点  
-                        //debugger;
-                        //marker[i] = new window.BMap.Marker(point[i]); //按照地图点坐标生成标记 
-                        BMap.Convertor.translate(point[i],0,generator(i)); 
-                    }  
-                    //BMap.Convertor.transMore(point,0,callback);
-                }  
-                
-                //坐标转换完之后的回调函数
-                function generator(i)
-                {
-                    return function translateCallback(point1){
-                        var myIcon = new BMap.Icon("img/map_marker.png", new BMap.Size(30, 57),
-                        {
-                            offset: new window.BMap.Size(15, -57), // 指定定位位置
-                            imageOffset: new BMap.Size(0, 0) // 设置图片偏移
-                        });;
-                        var marker1 = new BMap.Marker(point1,{icon:myIcon});
-                        map.addOverlay(marker1);
-                        var label = new BMap.Label(markerArr[i].nickname, { offset: new window.BMap.Size(20, -10)});
-                        marker1.setLabel(label); //添加百度label
-                        if(i==0)
-                            map.setCenter(point1);              
-                        marker1.onclick = function () { 
-                            document.getElementById("icon2").src = markerArr[i].icon;
-                            document.getElementById("nickname2").innerText = markerArr[i].nickname;
-                            data.datasets[1].data = markerArr[i].data;
-                            createChart();
-                            calculate_similarity(0,i);
-                            map.setCenter(point1);
-                        };
-                        can_continue = true;
-                    };
-                }
-                
-                var defaults = {
-                    scaleFontFamily : "微软雅黑",
-                    scaleFontSize : 10,
-                    animation : true,
-                    pointDotRadius : 3,
-                }
-                
-                //异步调用百度js  
-                function map_load() { 
-                    get_json();
-                    var load = document.createElement("script");  
-                    load.src = "http://api.map.baidu.com/api?v=1.5&callback=map_init&ak=56hSBkT6lEQ5hWlVLRgnqnLY";  
-                    document.body.appendChild(load);  
-                }  
-                
-                function get_data(){
-                    $.getJSON("get_ranking_info",function(data){
-                          alert("3sad sad ");
-                    });
-                }
-                
-                function createChart(){
-                    $("#myChart").remove();
-                    $("<canvas id='myChart' ></canvas>").appendTo($("#user_info"));
-                    var ctx = document.getElementById("myChart").getContext("2d");
-                    new Chart(ctx).Radar(data, defaults);
-                    $("#myChart").height($("#myChart").width() * 0.5);
-                    var window_height = document.all ? document.getElementsByTagName("html")[0].offsetHeight : window.innerHeight ; 
-                    var info_top = (window_height/2 - $("#myChart").width() * 0.5)/3; 
-                    $("#myChart").css("top",info_top-50);
-                    $("#go_date").css("top",info_top + $("#myChart").height()+30);
-                    $(".user_info0").css("top",info_top + $("#myChart").height());
-                }
-                
-                function calculate_similarity(m,n){
-                    var data1 = markerArr[m].data;
-                    var data2 = markerArr[n].data;
-                    var s = 0;
-                    for(var i =0; i < data1.length ;i++)
-                    {
-                        s += 1 - Math.abs(parseFloat(data1[i]) - parseFloat(data2[i])) / parseFloat(data1[i]);
-                    }
-                    s = (s/data1.length * 100).toFixed(2);
-                    document.getElementById("similary").innerHTML = "匹配度:<b style= 'color:red;font-size:2em'>"+s+"%</b>"; 
-                }
-                
-                function get_json(){   
-                $.getJSON("json",  
-                    function(json_data) {  
-                        for(var i = 0; i < json_data.length; i++){
-                            markerArr[i].nickname = json_data[i].nickname;
-                            markerArr[i].icon = json_data[i].icon;
-                        }
-                        document.getElementById("icon2").src = markerArr[0].icon;
-                        document.getElementById("nickname2").innerText = markerArr[0].nickname;
-                        data.datasets[1].data = markerArr[0].data;
-                        createChart();
-                        calculate_similarity(0,0);
-                    });  
-                } 
-                window.onload = map_load;  
-            </script>  
+            <div style="position:absolute;min-height:50%; width: 100%;" id="map">  
+            </div>  
         </div>  
     </div>  
     <div id = "user_info" style = "position:absolute;width:100%;height:50%;top:50%">
         <canvas id="myChart" style = "margin:0;padding:0"></canvas>
-        <button id = "go_date" style="position:absolute;left:70%;font-size:30px">约他运动</button>
+        <div id = "go_date" onclick = "show_settings();" style="position:absolute;left:75%;height:30px;line-height:30px;width:20%;font-size:12px;background-color:#ccc;text-align:center;z-index:1;display:none;">约他运动</div>
         <div class = "user_info0" style = "position:absolute;width:100%;height:20%;">
-            <img id = "icon2" src = "img/head3.jpg" style = "position:absolute;left:10%;width:15%;border-radius:50%;"/>
-            <div id = "nickname2" class = "username" style = "position:absolute;left:30%;top:10%;font-size:40px">谢宇辰</div>
-            <div id = "similary" style="position:absolute;left:30%;bottom:20%;font-size:30px">匹配度:<b style= "color:red;font-size:2em">90%</b></div>
-        </div>        
+            <img id = "icon2" style = "position:absolute;left:10%;width:15%;border-radius:50%;"/>
+            <div id = "nickname2" class = "username" style = "position:absolute;left:30%;top:10%;font-size:12px" ></div>
+            <div id = "similary" style="position:absolute;left:30%;bottom:20%;font-size:12px"></div>
+        </div>    
     </div>
-
+    <div id = "hide_map" style = "position:absolute;bottom:50%;height:5%;background-color:#eee;width:100%;z-index:99"></div>
+    <div id = "cover" onclick = "close_settings()" style = "position:fixed;opacity:0.8;background-color:#333;width:100%;height:100%;z-index:100;display:none"></div>
+    <div id = "invitation_settings" style= "position:absolute;width:50%;height:200px;left:25%;top:28%;background-color:#ccc;z-index:101;border-radius:10px;display:none">
+		<label for="appDateTime" style = "font-size:12px;position:absolute;left:10%;top:10%;"><b>日期时间:</b></label>
+		<input readonly="readonly" name="appDateTime" id="appDateTime" type="text" style = "position:absolute;left:10%;top:20%;width:80%;font-size:12px"/>
+        <label for="appDateTime" style = "font-size:12px;position:absolute;left:10%;top:30%;"><b>地点:</b></label>
+        <input readonly="readonly" onclick = "choose_place()" id="place" type="text" style = "position:absolute;left:10%;top:40%;width:80%;font-size:12px"/>
+        <label for="appDateTime" style = "font-size:12px;position:absolute;left:10%;top:50%;"><b>附言:</b></label>
+        <input id="postscript" type="text" style = "position:absolute;left:10%;top:60%;width:80%;font-size:12px"/>
+        <div id = "go_date" onclick = "send_invitation()" style="position:absolute;left:30%;top:75%;width:40%;text-align:center;font-size:12px;height:15px;background-color:#eee">发送邀请</div>
+    </div>
+    <div id = "choose_place" style ="position:fixed;width:100%;height:100%;background-color:#eee;z-index:102;display:none">
+        <div id = "map_to_choose" style="position:absolute;width:100%;height:85%" ></div>
+        <input id="chosen_place" type="text" style = "position:absolute;left:10%;top:90%;width:40%;font-size:12px"/>
+        <div id = "confirm_place" onclick = "confirm_place()" style="position:absolute;left:60%;top:90%;width:15%;text-align:center;font-size:12px;height:20px;line-height:20px;background-color:#ccc">确定</div>
+        <div id = "cancel_place" onclick = "cancel_place()" style="position:absolute;left:80%;top:90%;width:15%;text-align:center;font-size:12px;height:20px;line-height:20px;background-color:#ccc">取消</div>
+    </div>
 </body>  
 </html>  

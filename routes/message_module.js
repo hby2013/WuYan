@@ -6,29 +6,9 @@ var server = express.Router();
 var https = require('https'); 
 
 var access_token;
+var ip_address = "59.66.136.44";
 
-var options = {
-  hostname: 'api.weixin.qq.com',
-  port: 443,
-  path: '/cgi-bin/token?grant_type=client_credential&appid='+tools.appid+'&secret='+tools.appsec,
-  method: 'GET'
-};
-
-var req = https.request(options, function(res) {
-  console.log("statusCode: ", res.statusCode);
-  console.log("headers: ", res.headers);
-
-  res.on('data', function(d) {
-    //process.stdout.write(d);
-    //var ss = d;
-    access_token = eval('('+d+')').access_token;
-  });
-});
-req.end();
-
-req.on('error', function(e) {
-  console.error(e);
-});
+tools.get_access_token();
 
 function getNowFormatDate() {
     var date = new Date();
@@ -82,11 +62,11 @@ message_module.send_walk_module = function(open_id, steps){
 	
     var data = JSON.stringify(model_info);
     console.log(data);  
-
+    console.log(access_token);
     var opt = {  
         method: "POST",  
         host: "api.weixin.qq.com",    
-        path: "/cgi-bin/message/template/send?access_token=" + access_token,  
+        path: "/cgi-bin/message/template/send?access_token=" + tools.access_token,  
         headers: {  
             "Content-Type": 'application/json',  
             "Content-Length": data.length  
@@ -132,7 +112,7 @@ message_module.send_sleep_module = function(open_id, sleep){
     var opt = {  
         method: "POST",  
         host: "api.weixin.qq.com",    
-        path: "/cgi-bin/message/template/send?access_token=" + access_token,  
+        path: "/cgi-bin/message/template/send?access_token=" + tools.access_token,  
         headers: {  
             "Content-Type": 'application/json',  
             "Content-Length": data.length  
@@ -143,6 +123,61 @@ message_module.send_sleep_module = function(open_id, sleep){
         if (serverFeedback.statusCode == 200) {  
             var body = "";  
             serverFeedback.on('data', function (data) { body += data; });
+        }  
+        else {  
+            res.send(500, "error");  
+        }  
+    });  
+    req.write(data+'\n');  
+    req.end();
+}
+
+message_module.send_invitation_module = function(res, openid, nickname, time, place, invitation_id){
+  var model_info = {
+
+        "touser":openid,
+
+        "template_id":"7QMd1MLO1X2lQSlsJEnsVqAAzlkDmhqTha6ZzfqEBi4",
+        "url":ip_address+"/show_invitation.html?invitation_id="+invitation_id,
+
+        "topcolor":"#FF0000",
+
+        "data":{
+
+            "nickname": {
+                "value":nickname,
+                "color":"red",
+            },
+            
+            "time": {
+                "value":time,
+                "color":"green",
+            },
+            
+            "place":{
+                "value":place,
+                "color":"brown",
+            }
+            
+       }
+
+    };
+  
+    var data = JSON.stringify(model_info);
+    console.log(data);  
+    var opt = {  
+        method: "POST",  
+        host: "api.weixin.qq.com",    
+        path: "/cgi-bin/message/template/send?access_token=" + tools.access_token,  
+        headers: {  
+            "Content-Type": 'application/json',  
+            "Content-Length": data.length  
+        }  
+    };  
+    var req = https.request(opt, function (serverFeedback) {  
+        if (serverFeedback.statusCode == 200) {  
+            var body = "";  
+            serverFeedback.on('data', function (data) { body += data; })
         }  
         else {  
             res.send(500, "error");  

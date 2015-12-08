@@ -10,7 +10,8 @@ var users = require('./routes/users');
 var query_steps = require('./routes/steps');
 var query_ranking = require('./routes/ranking');
 var wechat = require('./routes/main_response');
-var info = require('./routes/info')
+var info = require('./routes/info');
+var invitation = require('./routes/invitation')
 var app = express();
 
 //database
@@ -40,8 +41,13 @@ app.get(/steps/, query_steps.steps(db));
 app.get(/ranking/, query_ranking.ranking(db));
 app.get(/info/, info.info(db));
 
-app.get('/json',query_ranking.get_ranking_info(db)); 
+//app.get('/json',query_ranking.get_ranking_info(db)); 
+
+app.post('/get_ranking_info',query_ranking.get_ranking_info(db)); 
 app.post('/logging',info.logging_finished(db)); 
+app.post('/send_invitation',invitation.send_invitation(db));
+app.post('/get_invitation_info',invitation.get_invitation_info(db));
+app.post('/deal_with_invitation',invitation.deal_with_invitation(db));
 //app.post('/logging',info.logging(db)); 
 
 app.listen(80);

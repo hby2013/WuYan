@@ -10,7 +10,7 @@ var config = {
     appid: tools.appid,
 }
 
-var ip_address = "59.66.139.230";
+var ip_address = "59.66.136.44";
 
 //database
 var mongo = require('mongodb');
@@ -51,15 +51,15 @@ function input_location(message){
 }
 
 function query_steps_today(message, req, res, next) {
-    var data_day = db.get('day');
+    var data_day = db.get('basic');
     var steps;
-    data_day.find({"username":message.FromUserName}, function(err,docs) {
+    data_day.find({"openid":message.FromUserName}, function(err,docs) {
       if(docs.length == 0) {
         steps = parseInt(Math.random() * 20000);
         var icon = '';
         get_icon_and_send_message(message, data_day, steps, 1);
       } else {
-        message_module.send_walk_module(message.FromUserName, docs[0].steps);
+        message_module.send_walk_module(message.FromUserName, docs[0].distance);
       }
       res.reply("");
     });
