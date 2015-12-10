@@ -1,4 +1,5 @@
 var https = require('https'); 
+var http = require('http'); 
 var tools = require('./tools');
 var message_module = require('./message_module');
 
@@ -35,6 +36,31 @@ function get_user_info(db, openid, i, access_token){
 function get_day_data(db, openid, i, access_token){
     var day_data = db.get('day_data');
     day_data.insert({"userid":(i+""),"openid":openid,"date":new Date("2015/12/03"),"steps":0,"sleep_time":0,"calories":0});
+}
+
+function add_single_detail(db, userid, openid, myDate){
+    var today = myDate.toLocaleDateString().replace(/\//g,"-");
+    myDate.setDate(myDate.getDate()-6);
+    var beginDate = myDate.toLocaleDateString().replace(/\//g,"-");
+    var options = {
+    hostname: 'wrist.ssast2015.com',
+    port: 443,
+    path: '/bongdata/?startTime='+beginDate+'%2000:00:00&endTime='+today+'%2000:00:00&user='+userid,
+    method: 'GET'
+  };
+
+  var req = http.request(options, function(res) {
+    res.on('data', function(d) {
+      console.log(eval('('+d[0]+')').startTime);
+      //console.log(tools.access_token);
+    });
+  });
+  req.end();
+
+  req.on('error', function(e) {
+    console.error(e);
+  });
+    
 }
 
 database.adduser = function (db){
@@ -130,6 +156,19 @@ database.add_day_data = function (db){
 
     req.on('error', function(e) {
         console.error(e);
+    });
+}
+
+database.add_walk_detail = function(db){
+    var basic = db.get('basic');
+    var myDate = new Date();
+    basic.find({}, function(err,docs) {
+        for(var i = 0; i < docs.length; i++)
+        {
+            var userid = docs[i].userid;
+            var openid = docs[i].openid;
+            add_single_detail(db, userid, openid, myDate);
+        }
     });
 }
 

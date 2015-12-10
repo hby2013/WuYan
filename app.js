@@ -55,7 +55,15 @@ app.post('/attention/special_friend_list/',attention.rev_special_friend_list(db)
 //app.post('/logging',info.logging(db)); 
 //database.adduser(db);
 //database.add_day_data(db);
+//database.add_walk_detail(db);
 
 app.listen(80);
 
+/*var basic = db.get('basic');
+basic.find({}, function(err,docs) {
+    for(var i = 0; i < docs.length; i++){
+        basic.update({userid:i+""},{$inc:{distance:1}});
+    }
+});
+*/
 module.exports = app;

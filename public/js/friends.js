@@ -7,13 +7,14 @@ var page_id = 0; //存储当前页面
 list = [{icon:"icon1.jpg", userid:"123", nickname:"夏英达",steps:1234},
         {icon:"icon2.jpg", userid:"456", nickname:"范冰冰",steps:4567}];
 
-special_friend = {icon:"icon2.jpg", userid:"1341", name:"范冰冰", steps_today:4567, steps_week: [3777,2859,4123,9999,5432,2222,3000], sleep_yesterday:6};
-
+special_friend = [];
 
 search_result = list;
 has_bind_button = false;
-
 var current_click_id = 0;
+var current_special_friend = 0;
+var current_click_spec_id = 0;
+//var current_click_id = 0;
 
 $(window).load(function(){
     $("nav li").css("color", "#8D8383");
@@ -42,6 +43,7 @@ function switch_page(){
     } else if($(this).attr("id")=="tag1"){
         if(page_id!=1){
             page_id=1;
+            $(".friend-list").empty();
             switch_to_page1();
         }
     } else if($(this).attr("id")=="tag2"){
@@ -90,8 +92,7 @@ function request_special_friend(){
         dataType:"json",
         success:function(data){
             if(data){
-                alert(data.basic_list[0].nickname);
-                alert(data.day_data_list[0].steps);
+                alert(data.day_data_list.length);
                 convert_data(data.basic_list,data.day_data_list);
             } else{
                 alert("返回值为空");
@@ -101,21 +102,57 @@ function request_special_friend(){
 }
 
 function convert_data(basic_list, day_data_list){
-    var friend = [];
+    special_friends = [];
     for(var i=0;i<day_data_list.length;i++){
         var special_friend = new Object();
         special_friend.icon = basic_list[i].icon;
         special_friend.userid = basic_list[i].userid;
         special_friend.name = basic_list[i].nickname;
-        special_friend.steps_week = [i,i,i,i,i,i,i];
+        special_friend.steps_week = [i,i+7,i,i,i*i,i,i];
         special_friend.steps_today = day_data_list[i].steps;
         special_friend.sleep_yesterday = day_data_list[i].sleep_time;
-        friend[i] = special_friend;
+        special_friends[i] = special_friend;
     }
-    show_special_friend(friend);
+    //show_special_friend(friend);
+    choose_special_friend(special_friends);
+}
+
+function choose_special_friend(friend){
+    $("#buttons-special-friend").remove();
+    var buttons_special_friend = $("<div id='buttons-special-friend'></div>");
+    $("#special-friend").append(buttons_special_friend);
+    var num_special_friend = friend.length;
+    if(friend.length != 1) {
+        for(var i=0; i<num_special_friend; i++) {
+            var single_button = $("<button class='but-special' id='but-special"+i+"'>"+friend[i].name+"</button>");
+            $("#buttons-special-friend").append(single_button);
+            $("#but-special"+i).click(function(){
+                var num = parseInt($(this).attr("id")[11]);
+                show_special_friend(special_friends[num]);
+            });
+        }
+    }
+    $(".but-special").css({
+        "background" : "-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9))",
+        "background-color":"#f9f9f9",
+        "border-radius":"6px",
+        "border":"1px solid #dcdcdc",
+        "font-size":"20px",
+        "font-weight":"bold",
+        "width":"30%",
+        "height":"30px",
+        "text-shadow":"0px 1px 0px #ffffff"
+    });
+    $("#buttons-special-friend").css({
+        "margin":"10px 10px"
+    });
+    show_special_friend(friend[current_special_friend]);
 }
 
 function show_special_friend(friend){
+    $("#special-friend-info").remove();
+    $("#sports-text").remove();
+    $("#sports-info").remove();
     var info_card = $("<section id='special-friend-info'><img id='special-friend-icon' src='"+friend.icon+"'><p id='special-friend-name'>"+friend.name+"</p><p id='special-friend-id'>账号："+friend.userid+"</p></section>");
     $("#special-friend").append(info_card);
     $("#special-friend-info").css({
@@ -342,24 +379,39 @@ function show_search_result(search_result){
     $(".add-friend").css({
         "position":"relative",
         "top":"10%",
-        "left":"70%",
+        "left":"10%",
         "border-radius":"3px",
         "background-color":"#74a12d",
         "color":"white",
-        "font-size":"18px",
+        "font-size":"16px",
         "width":"80px",
-        "height":"40px"
+        "height":"35px"
+    });
+    $(".add-special-friend").css({
+        "position":"relative",
+        "top":"10%",
+        "left":"12%",
+        "border-radius":"3px",
+        "background-color":"#74a12d",
+        "color":"white",
+        "font-size":"16px",
+        "width":"80px",
+        "height":"35px"
     });
     var button_add = $(".add-friend");
+    var button_add_special = $(".add-special-friend");
     for(var i=0; i<button_add.length; i++){
         $(button_add[i]).click(function(){
-            current_click_id = search_result[i].userid;
+            alert(search_result[i].userid);
         })
+        $(button_add_special[i]).click(function() {
+            current_click_spec_id = search_result[i].userid;
+        });
     }
 }
 
 function add_single_user(user){
-    var usercard = $("<section class='user-card'><img class='friend-icon' src='"+user.icon+"'><span class='user-name'>"+user.nickname+"</span><button class='add-friend'>关注</button></section>");
+    var usercard = $("<section class='user-card'><img class='friend-icon' src='"+user.icon+"'><span class='user-name'>"+user.nickname+"</span><button class='add-friend'>关注</button><button class='add-special-friend'>特别关注</button></section>");
     $(".user-list").append(usercard);
 }
 

@@ -5,7 +5,7 @@ var tools = require('./tools');
 var server = express.Router();
 var https = require('https'); 
 
-tools.get_access_token();
+//tools.get_access_token();
 
 function getNowFormatDate() {
     var date = new Date();
