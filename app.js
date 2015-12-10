@@ -9,8 +9,12 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var query_steps = require('./routes/steps');
 var query_ranking = require('./routes/ranking');
+var attention = require('./routes/attention');
 var wechat = require('./routes/main_response');
-var info = require('./routes/info')
+var info = require('./routes/info');
+var database = require('./routes/database');
+var tools = require('./routes/tools');
+var message_module = require('./routes/message_module');
 var app = express();
 
 //database
@@ -37,11 +41,29 @@ app.use('/wechat/', wechat);
 app.get(/steps/, query_steps.steps(db));
 
 //check ranking
+//console.log(tools.ip);
+
 app.get(/ranking/, query_ranking.ranking(db));
+app.get(/attention/, attention.attention(db));
 app.get(/info/, info.info(db));
+
 app.post('/logging',info.logging_finished(db)); 
+app.post('/attention/search/',attention.show_search(db)); 
+app.post('/attention/add/',attention.add_friend(db)); 
+app.post('/attention/friend_list/',attention.rev_friend_list(db)); 
+app.post('/attention/special_friend_list/',attention.rev_special_friend_list(db));
 //app.post('/logging',info.logging(db)); 
+//database.adduser(db);
+//database.add_day_data(db);
+//database.add_walk_detail(db);
 
 app.listen(80);
 
+/*var basic = db.get('basic');
+basic.find({}, function(err,docs) {
+    for(var i = 0; i < docs.length; i++){
+        basic.update({userid:i+""},{$inc:{distance:1}});
+    }
+});
+*/
 module.exports = app;

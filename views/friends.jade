@@ -7,11 +7,14 @@ html
     meta(name='apple-mobile-web-app-capable', ,='', content='yes')
     meta(content='telephone=no', name='format_detection')
     link(rel='stylesheet', type='text/css', href='/css/friends.css')
-    script(type='text/javascript', src='/js/jquery.js')
+    script(type='text/javascript', src='/js/jquery-1.11.1.js')
     script(type='text/javascript', src='/js/friends.js')
-  body
-    div#wrapper(stle='margin-top:0.5rem; margin-left:0; margin-right: 0; overflow: hidden; min-height:640px;')
-      nav.header(style='position: fixed; width:100%; top:0.5rem; left:0; z-index:199; -webkit-transform: translateZ(0); -webkit-box-sizing:border-box;')
+    script(type='text/javascript', src='/js/Chart.js')
+    script.
+        window.userid = !{JSON.stringify(userid)};
+  body(style='margin:0;padding:0')
+    div#wrapper(style='margin-top:0; margin-left:0; margin-right: 0; overflow: hidden; min-height:640px;')
+      nav.header(style='position: fixed; width:100%; top:0; left:0; z-index:199; -webkit-transform: translateZ(0); -webkit-box-sizing:border-box;')
         li#tag0.selected
           a &#x5173;&#x6CE8;
         li#tag1

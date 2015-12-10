@@ -7,15 +7,10 @@ var page_id = 0; //存储当前页面
 list = [{icon:"icon1.jpg", userid:"123", nickname:"夏英达",steps:1234},
         {icon:"icon2.jpg", userid:"456", nickname:"范冰冰",steps:4567}];
 
-special_friends = [
-                    {icon:"icon2.jpg", userid:"1341", name:"范冰冰", steps_today:4567, steps_week: [3777,2859,4123,9999,5432,2222,3000], sleep_yesterday:6},
-                    {icon:"icon2.jpg", userid:"123421", name:"夏英达", steps_today:4567, steps_week: [3777,2859,4123,9999,5432,2222,3000], sleep_yesterday:6}
-                    ];
-
+special_friend = [];
 
 search_result = list;
 has_bind_button = false;
-
 var current_click_id = 0;
 var current_special_friend = 0;
 var current_click_spec_id = 0;
@@ -47,7 +42,6 @@ $(window).load(function(){
         show_special_friend(special_friends[current_special_friend-1]);
         display_arrow(special_friends.length);
     });
-    //request_friend_list();
 });
 
 function switch_page(){
@@ -68,6 +62,7 @@ function switch_page(){
     } else if($(this).attr("id")=="tag1"){
         if(page_id!=1){
             page_id=1;
+            $(".friend-list").empty();
             switch_to_page1();
         }
     } else if($(this).attr("id")=="tag2"){
@@ -96,7 +91,6 @@ function switch_to_page1(){
     $("#friend-list").css("display","none");
     $("#special-friend").empty();
     request_special_friend();
-    //choose_special_friend(special_friends);
 }
 
 function switch_to_page2(){
@@ -116,8 +110,6 @@ function request_special_friend(){
         dataType:"json",
         success:function(data){
             if(data){
-                alert(data.basic_list[0].nickname);
-                alert(data.day_data_list[0].steps);
                 convert_data(data.basic_list,data.day_data_list);
             } else{
                 alert("返回值为空");
@@ -127,16 +119,16 @@ function request_special_friend(){
 }
 
 function convert_data(basic_list, day_data_list){
-    var friend = [];
+    special_friends = [];
     for(var i=0;i<day_data_list.length;i++){
         var special_friend = new Object();
         special_friend.icon = basic_list[i].icon;
         special_friend.userid = basic_list[i].userid;
         special_friend.name = basic_list[i].nickname;
-        special_friend.steps_week = [i,i,i,i,i,i,i];
+        special_friend.steps_week = [i,i+7,i,i,i*i,i,i];
         special_friend.steps_today = day_data_list[i].steps;
         special_friend.sleep_yesterday = day_data_list[i].sleep_time;
-        friend[i] = special_friend;
+        special_friends[i] = special_friend;
     }
     //show_special_friend(friend);
     choose_special_friend(special_friends);
@@ -272,9 +264,6 @@ function show_special_friend(friend){
         "background-color":"white"
     });
     show_chart(friend.steps_week);
-
-    
-
 }
 
 function show_chart(steps_week){

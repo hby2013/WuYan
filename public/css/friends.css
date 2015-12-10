@@ -6,6 +6,7 @@ body{
     color:#2b2b2b;
     font-size:.14rem;
     background: #EBECEF;
+    overflow-x: hidden; 
 }
 
 body{
