@@ -10,7 +10,7 @@ var config = {
     appid: tools.appid,
 }
 
-var ip_address = "59.66.136.44";
+var ip_address = "59.66.139.62";
 
 //database
 var mongo = require('mongodb');
@@ -20,7 +20,7 @@ var db = monk('localhost:27017/wechat');
 server.use(express.query());
 server.use('/', wechat(config).text(function(message, req, res, next){
   res.reply("text");
-  input_location(message);
+  //input_location(message);
 }).image(function(message, req, res, next){
   res.reply("image");
 }).voice(function(message, req, res, next){
@@ -41,7 +41,7 @@ server.use('/', wechat(config).text(function(message, req, res, next){
   }else if (req.weixin.Event == 'CLICK' && req.weixin.EventKey == 'ACHIEVEMENTS') {
     get_info(message, req, res, next);
   }else {
-	input_location(message);
+	//input_location(message);
   }
 }).middlewarify());
 

@@ -6,7 +6,7 @@ var server = express.Router();
 var https = require('https'); 
 
 var access_token;
-var ip_address = "59.66.136.44";
+var ip_address = "59.66.139.62";
 
 tools.get_access_token();
 
@@ -53,7 +53,7 @@ message_module.send_walk_module = function(open_id, steps){
 			
 			"currenttime": {
                 "value": current_time,
-				"color":"blue",
+				"color":"blue",     
             }
        }
 
@@ -62,7 +62,7 @@ message_module.send_walk_module = function(open_id, steps){
 	
     var data = JSON.stringify(model_info);
     console.log(data);  
-    console.log(access_token);
+    console.log(tools.access_token);
     var opt = {  
         method: "POST",  
         host: "api.weixin.qq.com",    

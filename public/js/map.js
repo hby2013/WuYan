@@ -1,4 +1,4 @@
-var ip_address = "59.66.136.44";
+var ip_address = "59.66.139.62";
 var current_person = 0;
 //var markerArr = [  
 //    { nickname: "夏英达", point: "116.320786,40.008045", icon:"img/head2.jpg",data:[28,48,40,70,23,34]},  

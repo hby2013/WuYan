@@ -78,7 +78,7 @@ function deal_with_invitation(i){
             $.ajax({
                 type:'post',
                 url:"/deal_with_invitation",
-                data:{"invitation_id":invitation_id,"openid":invitation_info.openid,"invitation_status":"2"},
+                data:{"invitation_id":invitation_id,"openid":invitation_info.openid,"nickname":invitation_info.nickname2,"invitation_status":"2"},
                 dataType:"json",
                 success:function(){
                 }

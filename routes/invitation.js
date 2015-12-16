@@ -83,6 +83,6 @@ exports.deal_with_invitation = function(db){
         else if(invitation_status == "2"){
             tools.customSendText(openid, nickname + "拒绝了你的邀请。");
         }
-        res.send("");
+        res.send("123");
     }
 }
