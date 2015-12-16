@@ -2,7 +2,7 @@ var https = require('https');
 var http = require('http'); 
 var tools = require('./tools');
 var message_module = require('./message_module');
-
+var basic_len;
 var database = {};
 //console.log("2"+tools.access_token);
 
@@ -21,8 +21,12 @@ function get_user_info(db, openid, i, access_token){
         res.on('data', function(d) {
             info.nickname = eval('('+d+')').nickname;
             info.icon = eval('('+d+')').headimgurl;
-            basic.find({}, function(err,docs) {
-                basic.insert({"userid":(i+""),"openid":openid,"nickname":info.nickname,"icon":info.icon,"height":160,"weight":150,"sex":"male","coins":0,"distance":0})
+            basic.find({"openid":openid}, function(err,docs) {
+                if(docs.length == 0){
+                    basic.insert({"userid":(basic_len+""),"openid":openid,"nickname":info.nickname,"icon":info.icon,"height":160,"weight":150,"sex":"male","coins":0,"distance":0});
+                    basic_len++;
+                }
+                //basic.insert({"userid":(i+""),"openid":openid,"nickname":info.nickname,"icon":info.icon,"height":160,"weight":150,"sex":"male","coins":0,"distance":0})
             });
         });
     });
@@ -33,9 +37,14 @@ function get_user_info(db, openid, i, access_token){
     });
 }
 
-function get_day_data(db, openid, i, access_token){
+function get_day_data(db, openid, userid){
     var day_data = db.get('day_data');
-    day_data.insert({"userid":(i+""),"openid":openid,"date":new Date("2015/12/03"),"steps":0,"sleep_time":0,"calories":0});
+    day_data.find({"openid":openid}, function(err,docs) {
+        if(docs.length == 0){
+            day_data.insert({"userid":userid,"openid":openid,"date":new Date("2015/12/13"),"steps":999,"sleep_time":400,"calories":100});
+        }
+    });
+    //day_data.insert({"userid":(i+""),"openid":openid,"date":new Date("2015/12/03"),"steps":0,"sleep_time":0,"calories":0});
 }
 
 function add_single_detail(db, userid, openid, myDate){
@@ -63,8 +72,9 @@ function add_single_detail(db, userid, openid, myDate){
     
 }
 
-database.adduser = function (db){
+database.adduser = function (db, len){
     var basic = db.get('basic');
+    basic_len = len;
     var access_token;
     var userlist = [];
 
@@ -116,7 +126,12 @@ database.adduser = function (db){
 
 database.add_day_data = function (db){
     var basic = db.get('basic');
-    var access_token;
+    basic.find({}, function(err,docs) {
+        for (var i=0;i<docs.length;i++){
+            get_day_data(db, docs[i].openid, docs[i].userid);
+        }
+    });
+    /*var access_token;
     var userlist = [];
 
     var options = {
@@ -157,6 +172,7 @@ database.add_day_data = function (db){
     req.on('error', function(e) {
         console.error(e);
     });
+*/
 }
 
 database.add_walk_detail = function(db){

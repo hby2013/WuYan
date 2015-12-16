@@ -9,6 +9,16 @@ var receiver = [];
 var meg_tag = [];
 var userid1 = [];
 var userid2 = [];
+
+var special_send_rev = {}
+var special_sender_nickname = [];
+var special_receiver_nickname = [];
+var special_sender = [];
+var special_receiver = [];
+var special_meg_tag = [];
+var special_userid1 = [];
+var special_userid2 = [];
+
 var my_db;
 send_rev.logs = "dff";
 
@@ -91,11 +101,47 @@ send_rev.add_friend = function(db){
     }
 }
 
+send_rev.add_special_friend = function(db){
+    var basic = db.get('basic');
+    my_db = db;
+    //console.log("read");
+    return function(req, res) {
+        //tools.customSendText(req.body.receiver, "hby"+"想要关注你，回复'r"+sender.length+":y'同意关注，回复'r"+sender.length+":n'拒绝关注");
+        special_userid1[special_userid1.length] = req.body.userid;
+        special_userid2[special_userid2.length] = req.body.friendid;
+        basic.find({}, function(err,docs) {
+            if(docs.length == 0) {
+            } else {
+                for(var i = 0; i < docs.length; i++)
+                {
+                    if(docs[i].userid == special_userid1[special_userid1.length-1]){
+                        special_sender[special_sender.length] = docs[i].openid;
+                        special_sender_nickname[special_sender_nickname.length] = docs[i].nickname;
+                    }
+                    if(docs[i].userid == special_userid2[special_userid2.length-1]){
+                        special_receiver[special_receiver.length] = docs[i].openid;
+                        special_receiver_nickname[special_receiver_nickname.length] = docs[i].nickname;
+                    }
+                }
+                tools.customSendText(special_receiver[special_receiver.length-1], "'"+special_sender_nickname[special_sender_nickname.length-1]+"'想对你进行特别关注，回复'y"+(special_sender.length-1)+"'同意关注，回复'n"+(special_sender.length-1)+"'拒绝关注");
+            }
+        });
+        special_meg_tag[special_meg_tag.length] = 0;
+        var meg = {"info":"y"};
+        res.send(JSON.stringify(meg));
+        //console.log(userid);
+    }
+}
+
 send_rev.rev_friend_list = function (db){
     return function(req, res) {
         var attention = db.get('attention');
         var basic = db.get('basic');
+        var day_data = db.get('day_data');
         var friends_list = [];
+        var today = new Date();
+        today.setDate(today.getDate()-3);
+        var search_day = today.toLocaleDateString().replace(/-/g,"\/");
         friends_list.length = 0;
         var userid = req.body.userid;
         attention.find({"userid1":userid, "friends_type":"1"}, function(err,docs) {
@@ -105,7 +151,18 @@ send_rev.rev_friend_list = function (db){
                 basic.find({"userid":docs[i].userid2}, function(err,doc) {
                     friends_list[friends_list.length] = doc[0];
                     if(len == friends_list.length){
-                        res.send(JSON.stringify(friends_list));
+                        day_data.find({"date":new Date(search_day)},function(err, docs){
+                            for(var j=0;j<docs.length;j++){
+                                for(var k=0;k<len;k++){
+                                    if(docs[j].userid == friends_list[k].userid){
+                                        friends_list[k].distance = docs[j].steps;
+                                        break;
+                                    }
+                                }
+                            }
+                            res.send(JSON.stringify(friends_list));
+                        })
+                        //res.send(JSON.stringify(friends_list));
                     }
                 });
             }
@@ -120,28 +177,35 @@ send_rev.rev_special_friend_list = function (db){
         var attention = db.get('attention');
         var basic = db.get('basic');
         var day_data = db.get('day_data');
+        var today = new Date();
+        today.setDate(today.getDate()-3);
+        var search_day = today.toLocaleDateString().replace(/-/g,"\/");
         //var basic_no = 0, day_data_no = 1;
         var special_friends_list = [];
         var basic_list = [], day_data_list =[];
         var userid = req.body.userid;
         attention.find({"userid1":userid, "friends_type":"2"}, function(err,docs) {
             var len = docs.length;
-            for(var i = 0, j =0 ; i < docs.length && j < docs.length;i++,j++){
+            for(var i = 0; i < docs.length; i++){
                 //console.log(len);
                 basic.find({"userid":docs[i].userid2}, function(err,doc) {
-                    basic_list[basic_list.length] = doc[0];
-                    console.log("basic");
-                    if(len == basic_list.length && len == day_data_list.length){
-                        console.log(1);
-                        res.send({"basic_list":basic_list,"day_data_list":day_data_list});
-                    }
-                });
-                day_data.find({"userid":docs[i].userid2}, function(err,doc) {
-                    day_data_list[day_data_list.length] = doc[0];
-                    console.log("day_data");
-                    if(len == day_data_list.length && len == basic_list.length){
-                        console.log(2);
-                        res.send({"basic_list":basic_list,"day_data_list":day_data_list});
+                    special_friends_list[special_friends_list.length] = new Object();
+                    special_friends_list[special_friends_list.length - 1] = doc[0];
+                    if(len == special_friends_list.length){
+                        day_data.find({"date":new Date(search_day)},function(err, docs){
+                            for(var j=0;j<docs.length;j++){
+                                for(var k=0;k<len;k++){
+                                    if(docs[j].userid == special_friends_list[k].userid){
+                                        special_friends_list[k].steps = docs[j].steps;
+                                        special_friends_list[k].sleep_time = docs[j].sleep_time;
+                                        special_friends_list[k].steps_week = [1234,2444,3444,4000,6000,7000,2000];
+                                        break;
+                                    }
+                                }
+                            }
+                            res.send(JSON.stringify(special_friends_list));
+                        })
+                        //res.send(JSON.stringify(friends_list));
                     }
                 });
             }
@@ -178,6 +242,39 @@ send_rev.set_meg_tags = function(i, val){
 send_rev.insert_attentionship = function(i){
     var attention = my_db.get('attention');
     attention.insert({"userid1":userid1[i],"userid2":userid2[i],"friends_type":"1"});
+}
+
+
+
+
+
+send_rev.special_senders = function(){
+    return special_sender;
+}
+
+send_rev.special_receivers = function(){
+    return special_receiver;
+}
+
+send_rev.special_sender_nicknames = function(){
+    return special_sender_nickname;
+}
+
+send_rev.special_receiver_nicknames = function(){
+    return special_receiver_nickname;
+}
+
+send_rev.special_meg_tags = function(){
+    return special_meg_tag;
+}
+
+send_rev.set_special_meg_tags = function(i, val){
+    special_meg_tag[i] = val;
+}
+
+send_rev.insert_special_attentionship = function(i){
+    var attention = my_db.get('attention');
+    attention.insert({"userid1":special_userid1[i],"userid2":special_userid2[i],"friends_type":"2"});
 }
 
 module.exports = send_rev

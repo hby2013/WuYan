@@ -51,6 +51,7 @@ server.use('/', wechat(config).text(function(message, req, res, next){
 function response_text(message, req, res, next){
   var my_text = message.Content;
   var sender_no = parseInt(my_text.substring(0,my_text.length-1));
+  var special_sender_no = parseInt(my_text.substring(1,my_text.length));
   //console.log(sender_no);
   if(my_text.length > 1 && (attention.meg_tags())[sender_no] == 0){
     //console.log("attention");
@@ -64,6 +65,20 @@ function response_text(message, req, res, next){
       var response = "'"+(attention.receiver_nicknames())[sender_no]+"'拒绝了你的关注";
       tools.customSendText((attention.senders())[sender_no],response);
       attention.set_meg_tags(sender_no, 1);
+    }
+  }
+  else if(my_text.length > 1 && (attention.special_meg_tags())[special_sender_no] == 0){
+    //console.log("attention");
+    if(my_text.substring(0,1)=="y"){
+      var response = "'"+(attention.special_receiver_nicknames())[special_sender_no]+"'同意了你的特别关注";
+      tools.customSendText((attention.special_senders())[special_sender_no],response);
+      attention.set_special_meg_tags(special_sender_no, 1);
+      attention.insert_special_attentionship(special_sender_no);
+    }
+    else if(my_text.substring(0,1)=="n"){
+      var response = "'"+(attention.special_receiver_nicknames())[special_sender_no]+"'拒绝了你的关注";
+      tools.customSendText((attention.special_senders())[special_sender_no],response);
+      attention.set_special_meg_tags(special_sender_no, 1);
     }
   }
   res.reply("");

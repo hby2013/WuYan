@@ -49,21 +49,21 @@ app.get(/info/, info.info(db));
 
 app.post('/logging',info.logging_finished(db)); 
 app.post('/attention/search/',attention.show_search(db)); 
-app.post('/attention/add/',attention.add_friend(db)); 
+app.post('/attention/add_friend/',attention.add_friend(db)); 
+app.post('/attention/add_special_friend/',attention.add_special_friend(db)); 
 app.post('/attention/friend_list/',attention.rev_friend_list(db)); 
 app.post('/attention/special_friend_list/',attention.rev_special_friend_list(db));
 //app.post('/logging',info.logging(db)); 
 //database.adduser(db);
 //database.add_day_data(db);
 //database.add_walk_detail(db);
+//console.log(db.get('basic').count());
 
 app.listen(80);
 
 /*var basic = db.get('basic');
 basic.find({}, function(err,docs) {
-    for(var i = 0; i < docs.length; i++){
-        basic.update({userid:i+""},{$inc:{distance:1}});
-    }
+    database.adduser(db, docs.length);
 });
 */
 module.exports = app;
