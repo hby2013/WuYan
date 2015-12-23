@@ -2,14 +2,16 @@ var tools = {};
 var API = require("wechat-api");
 var request = require("request");
 var fs = require("fs");
+var https = require('https');
 var path = require("path");
 var https = require('https'); 
 
-tools.token = "hby13";
-tools.appid = "wx04f3330c621e1dec";
+tools.token = "123456";
+tools.appid = "wx63e1a5edee5ef3b3";
 tools.appsec = "d4624c36b6795d1d99dcf0547af5443d"; 
-tools.ip = "59.66.139.73";
+tools.ip = "59.66.139.15";
 tools.access_token = "";
+tools.previousDays = 1;
 
 var custom_url = "https://api.weixin.qq.com/cgi-bin/message/custom/send";
 var device_url = "https://api.weixin.qq.com/device/";
@@ -45,7 +47,6 @@ var postJSON = function(data){
    };
 };
 
-
 tools.get_access_token = function(){
   var options = {
     hostname: 'api.weixin.qq.com',
@@ -71,7 +72,6 @@ tools.get_access_token = function(){
     console.error(e);
   });
 }
-
 
 tools.menuCreate = function(menu, callback){
     api.createMenu(menu, callback);

@@ -12,16 +12,18 @@ html
     meta(name='HandheldFriendly', content='true')
     link(rel='stylesheet', type='text/css', href='/css/ranking_list.css')
   body(style='margin:0px;padding:0px;font-family:微软雅黑;background-color:#eeeeee')
-    each item, i in list
+    each item, i in ranking_info.list
         .single_list
             .number #{i+1}
             img.head(src='#{item.icon}')
             .info
                 .username #{item.nickname}
-                .steps #{item.steps}
-                .amount_dividing(value='#{item.steps}')
+                .steps #{item.similarity}%
+                .amount_dividing(value='#{item.similarity}')
             img.challenge(src='/img/1.png', value='i')
-    #longest_dividing(value='#{list[0].steps}')
+    #longest_dividing(value='#{ranking_info.list[0].similarity}')
+    a(href="/map.html?myid=#{ranking_info.myid}")
+      input(type='button')
    script.
     var rank_front;
     var number;

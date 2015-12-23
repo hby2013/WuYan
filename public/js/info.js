@@ -17,7 +17,7 @@ $('#submit').click(function(){
         dataType:"json",
         success:function(data){
             if(data){
-                console.log('成功了啊');
+                console.log('录入成功！');
             } else{
                  console.log("返回值为空");
             }

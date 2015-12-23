@@ -4,8 +4,9 @@ $(function () {
 	var width = window_height/50;
 	$("#set_font_size").css("font-size",width);
 	var chart_width = $("#myChart").width();
-	$("#myChart")[0].height = chart_width;
-	var chart_top= (window_height * 0.2 + (window_height * 0.8 - chart_width)/2);
+	//$("#myChart")[0].height = $("#header").height();
+	var chart_top= $("#header").height();
+	$("#myChart")[0].height = window_height - $("#header").height();
 	$("#myChart").css("top", chart_top);
 	$("#chart_title").css("top", chart_top - 40);
 	$("#statistics").css("width", 0.7 * window_width);

@@ -5,7 +5,9 @@ var tools = require('./tools');
 var server = express.Router();
 var https = require('https'); 
 
-//tools.get_access_token();
+
+tools.get_access_token();
+
 
 function getNowFormatDate() {
     var date = new Date();
@@ -23,8 +25,7 @@ function getNowFormatDate() {
 	if (minute >= 0 && minute <= 9) {
         minute = "0" + minute;
     }
-    var currentdate = date.getHours() + seperator2 + minute
-            + seperator2 + date.getSeconds();
+    var currentdate = date.getHours() + seperator2 + minute + seperator2 + date.getSeconds();
     return currentdate;
 }
 
@@ -36,7 +37,7 @@ message_module.send_walk_module = function(open_id, steps){
 
         "touser":open_id,
 
-        "template_id":"8oQdCR541Bn7soezK1fNU05ks8o8cZOrEc-DLSCUTk4",
+        "template_id":"C_L-8NaIkqDFlLMRYMbr63wJBMsvoKxm2ekOIvaVa_4",
         "url":"http://weixin.qq.com/download",
 
         "topcolor":"green",
@@ -48,9 +49,9 @@ message_module.send_walk_module = function(open_id, steps){
 				"color":"red",
             },
 			
-			"currenttime": {
+			"current_time": {
                 "value": current_time,
-				"color":"blue",
+				"color":"blue",     
             }
        }
 
@@ -58,7 +59,6 @@ message_module.send_walk_module = function(open_id, steps){
   
 	
     var data = JSON.stringify(model_info);
-    //console.log(data);  
 
     var opt = {  
         method: "POST",  
@@ -69,7 +69,6 @@ message_module.send_walk_module = function(open_id, steps){
             "Content-Length": data.length  
         }  
     };  
-    //console.log("1\n");
     var req = https.request(opt, function (serverFeedback) {  
         if (serverFeedback.statusCode == 200) {  
             var body = "";  
@@ -83,20 +82,24 @@ message_module.send_walk_module = function(open_id, steps){
     req.end();  
 }
 
-message_module.send_sleep_module = function(open_id, sleep){
+message_module.send_sleep_module = function(open_id, sleep_time){
   var model_info = {
 
         "touser":open_id,
 
-        "template_id":"fpa-6VQ6IGJTVRtfedAxvjOdAl57I7zsR3rbrNd35z4",
+        "template_id":"CFlHUYq63-ZlGxnXZmjysmkiV7qGIg_0Ave-3EfHNs0",
         "url":"http://weixin.qq.com/download",
 
         "topcolor":"#FF0000",
 
         "data":{
 
-            "sleep_time": {
-                "value":sleep,
+            "sleep_hour": {
+                "value":parseInt(sleep_time / 60),
+                "color":"red",
+            },
+            "sleep_min": {
+                "value":sleep_time % 60,
                 "color":"red",
             }
        }
@@ -120,6 +123,45 @@ message_module.send_sleep_module = function(open_id, sleep){
         if (serverFeedback.statusCode == 200) {  
             var body = "";  
             serverFeedback.on('data', function (data) { body += data; });
+        }  
+        else {  
+            res.send(500, "error");  
+        }  
+    });  
+    req.write(data+'\n');  
+    req.end();
+}
+
+message_module.send_invitation_module = function(openid, invitation_id){
+  var model_info = {
+
+        "touser":openid,
+
+        "template_id":"RIRGHX5mhPJx6fgudj34n0nBHaTx5JhEWnWFXQpX_04",
+        "url":tools.ip+"/show_invitation.html?invitation_id="+invitation_id,
+
+        "topcolor":"#FF0000",
+
+        "data":{
+
+        }           
+    };
+  
+    var data = JSON.stringify(model_info);
+    //console.log(data);  
+    var opt = {  
+        method: "POST",  
+        host: "api.weixin.qq.com",    
+        path: "/cgi-bin/message/template/send?access_token=" + tools.access_token,  
+        headers: {  
+            "Content-Type": 'application/json',  
+            "Content-Length": data.length  
+        }  
+    };  
+    var req = https.request(opt, function (serverFeedback) {  
+        if (serverFeedback.statusCode == 200) {  
+            var body = "";  
+            serverFeedback.on('data', function (data) { body += data; })
         }  
         else {  
             res.send(500, "error");  

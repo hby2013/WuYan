@@ -1,6 +1,6 @@
+//database.day_data:2015/12/19
+
 var tools = require('./tools');
-//var server = require('./main_response');
-//var wechat = require('wechat');
 var send_rev = {}
 var sender_nickname = [];
 var receiver_nickname = [];
@@ -140,7 +140,7 @@ send_rev.rev_friend_list = function (db){
         var day_data = db.get('day_data');
         var friends_list = [];
         var today = new Date();
-        today.setDate(today.getDate()-3);
+        today.setDate(today.getDate()-tools.previousDays);
         var search_day = today.toLocaleDateString().replace(/-/g,"\/");
         friends_list.length = 0;
         var userid = req.body.userid;
@@ -178,7 +178,7 @@ send_rev.rev_special_friend_list = function (db){
         var basic = db.get('basic');
         var day_data = db.get('day_data');
         var today = new Date();
-        today.setDate(today.getDate()-3);
+        today.setDate(today.getDate()-tools.previousDays);
         var search_day = today.toLocaleDateString().replace(/-/g,"\/");
         //var basic_no = 0, day_data_no = 1;
         var special_friends_list = [];

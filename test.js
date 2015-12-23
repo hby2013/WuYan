@@ -19,7 +19,7 @@ var my_menu = {
       "sub_button":[
                     {"type":"click","name":"排行榜","key":"RANKING"},
                     {"type":"click","name":"关注","key":"ATTENTION"},
-                    {"type":"click","name":"成就系统","key":"ACHIEVEMENTS"}
+                    {"type":"click","name":"信息录入","key":"ACHIEVEMENTS"}
                     ]
    }]
 }
