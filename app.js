@@ -16,6 +16,8 @@ var invitation = require('./routes/invitation')
 var database = require('./routes/database');
 var tools = require('./routes/tools');
 var message_module = require('./routes/message_module');
+var world = require('./routes/travel_world');
+var query_coins = require('./routes/coins');
 var app = express();
 
 //database
@@ -39,16 +41,17 @@ app.use('/users', users);
 app.use('/wechat/', wechat);
 
 // check weekly report
-app.get(/steps/, query_steps.steps(db));
+app.post('/get_worldmap1',world.get_worldmap1(db));
+app.post('/steps', query_steps.steps(db));
 
-//check ranking
-//console.log(tools.ip);
+app.post('/ranking', query_ranking.ranking(db));
 
-app.get(/ranking/, query_ranking.ranking(db));
-app.get(/attention/, attention.attention(db));
-app.get(/info/, info.info(db));
+app.post('/attention', attention.attention(db));
+app.post('/country_info',world.post_country_info(db));
 
-
+app.post('/info', info.info(db));
+app.post('/coins',query_coins.coins(db));
+app.post('/buy_item',query_coins.buy_item(db));
 app.post('/get_ranking_info',query_ranking.get_ranking_info(db)); 
 app.post('/logging',info.logging_finished(db)); 
 app.post('/send_invitation',invitation.send_invitation(db));
@@ -64,7 +67,7 @@ app.post('/attention/special_friend_list/',attention.rev_special_friend_list(db)
 //database.adduser(db);
 //database.add_day_data(db);
 //database.add_walk_detail(db);
-//database.add_location(db);
+//database.add_country_info(db);
 //console.log(db.get('basic').count());
 
 app.listen(80);

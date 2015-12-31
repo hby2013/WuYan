@@ -2,8 +2,7 @@ var tools = require("./tools");
 
 exports.ranking = function(db) {
 	return function(req, res) {
-        var url = req._parsedOriginalUrl.path;
-        var openid = url.substring(9, url.length);
+        var openid = req.body.openid;
         getData(openid, db, res, 0);
         /*var user_col = db.get('basic');
 		var day_col = db.get('day_data');
@@ -302,10 +301,12 @@ function getData(openid, db, res, tag){
                         ranking_info.list[i] = near_user[i];
                         console.log(near_user[i]);
                     }
-                    console.log(myinfo);   
+                    //console.log(myinfo);   
                     ranking_info.list.sort(function(a,b){return parseInt(a.similarity) < parseInt(b.similarity)?1:-1});
-                    if(tag == 0)
-                        res.render('ranking_list', {ranking_info : ranking_info});
+                    if(tag == 0){
+                        console.log(ranking_info);
+                        res.send(JSON.stringify(ranking_info));
+                    }
                     else{
                         near_user.unshift(myinfo);
                         res.send(JSON.stringify(near_user));

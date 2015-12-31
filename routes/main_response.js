@@ -40,13 +40,17 @@ server.use('/', wechat(config).text(function(message, req, res, next){
     query_sleep_today(message, req, res, next);
   } else if (req.weixin.Event == 'CLICK' && req.weixin.EventKey == 'RANKING') {
     query_ranking(message, req, res, next);
+  } else if (req.weixin.Event == 'CLICK' && req.weixin.EventKey == 'WORLD') {
+    query_world(message, req, res, next);
+  }else if (req.weixin.Event == 'CLICK' && req.weixin.EventKey == 'COINS') {
+    query_coins(message, req, res, next);  
   }else if (req.weixin.Event == 'CLICK' && req.weixin.EventKey == 'ATTENTION') {
     query_attention(message, req, res, next);
   }else if (req.weixin.Event == 'CLICK' && req.weixin.EventKey == 'ACHIEVEMENTS') {
     get_info(message, req, res, next);
   }else {
     //res.reply("imdddage");
-	  database.adduser(db);
+    database.adduser(db);
     //res.reply("image");
   }
 }).middlewarify());
@@ -110,14 +114,21 @@ function query_steps_today(message, req, res, next) {
 function query_steps_week(message, req, res, next) {
     var data_week = db.get('week');
     var steps = [];
-    var url = "http://"+ip_address+"/steps/"+message.FromUserName;
+    var url = "http://"+ip_address+"/steps.html?openid="+message.FromUserName;
     tools.customSendArticle(message.FromUserName, "本周运动趋势", "点击查看详细", "http://img.taopic.com/uploads/allimg/120410/9128-12041023430285.jpg", url);
+    res.reply("");
+}
+
+function query_coins(message, req, res, next) {
+    var url = "http://"+ip_address+"/show_coins.html?openid="+message.FromUserName;
+    tools.customSendArticle(message.FromUserName, "金币商城","点击查看详情","http://pic.nipic.com/2008-03-04/200834104348752_2.jpg",url);
+    res.reply('');
 }
 
 function query_sleep_today(message, req, res, next) {
     var data_day = db.get('day_data');
     var today = new Date();
-    today.setDate(today.getDate()-3);
+    today.setDate(today.getDate()-tools.previousDays);
     var search_day = today.toLocaleDateString().replace(/-/g,"\/");
     var steps;
     data_day.find({"openid":message.FromUserName, "date":new Date(search_day)}, function(err,docs) {
@@ -133,13 +144,19 @@ function query_sleep_today(message, req, res, next) {
 }
 
 function query_ranking(message, req, res, next) {
-    var url = "http://"+ip_address+"/ranking/"+message.FromUserName;
+    var url = "http://"+ip_address+"/ranking.html?openid="+message.FromUserName;
     tools.customSendArticle(message.FromUserName, "本日运动排行榜", "点击查看详细", "http://img.taopic.com/uploads/allimg/120410/9128-12041023430285.jpg", url);
     res.reply('');
 }
 
+function query_world(message, req, res, next) {
+    var url = "http://"+ip_address+"/story1/index.html?openid="+message.FromUserName;
+    tools.customSendArticle(message.FromUserName, "环游世界", "点击查看详细", "http://pic2.ooopic.com/12/63/98/45bOOOPIC82_1024.jpg", url);
+    res.reply('');
+}
+
 function query_attention(message, req, res, next) {
-  var url = "http://"+ip_address+"/attention/"+message.FromUserName;
+  var url = "http://"+ip_address+"/attention.html?openid="+message.FromUserName;
   tools.customSendArticle(message.FromUserName, "我的关注", "点击查看详细", "http://img.taopic.com/uploads/allimg/120410/9128-12041023430285.jpg", url);
   res.reply('');
 }
@@ -202,7 +219,7 @@ function get_icon_and_send_message(message, database, steps, mode) {
 }
 
 function get_info(message, req, res, next){
-	var url = "http://"+ip_address+"/info/"+message.FromUserName;
+  var url = "http://"+ip_address+"/info.html?openid="+message.FromUserName;
     tools.customSendArticle(message.FromUserName, "信息设置", "点击查看详细", "http://img.taopic.com/uploads/allimg/120410/9128-12041023430285.jpg", url);
     res.reply('');
 }

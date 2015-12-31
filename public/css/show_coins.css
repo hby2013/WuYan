@@ -1,0 +1,30 @@
+.item
+{
+    background-color:#ebb664;
+    box-shadow:4px 4px 4px 0 black;
+    height:75px;
+    margin:5%;
+    padding:5%;
+    width:80%;
+}
+.icon
+{
+    border-radius:5px;
+    box-shadow:2px 2px 2px 0 black;
+    float:left;
+    height:90%;
+    margin-right:5%;
+}
+.inner
+{
+    color:#613d1a;
+    font-size:18px;
+    height:90%;
+}
+.buy
+{
+    float:right;
+    height:30px;
+    position:relative;
+    top:-20px;
+}

@@ -26,24 +26,17 @@ send_rev.attention = function(db) {
 	return function(req, res) {
         //console.log(111);
 		var basic = db.get('basic');
-		var url = req._parsedOriginalUrl.path;
-		var openid = url.substring(11, url.length);
+		var openid = req.body.openid;
         var userid = "";
         //console.log(1);
 
-		basic.find({}, function(err,docs) {
+		basic.find({"openid":openid}, function(err,docs) {
             //console.log(docs);
 			if(docs.length == 0) {
 				
 			} else {
-                for(var i = 0; i < docs.length; i++)
-                {
-                    if(docs[i].openid == openid){
-                        userid = docs[i].userid;
-                        break;
-                    }
-                }
-				res.render('friends',{userid:userid});
+                userid = docs[0].userid;
+				res.send(JSON.stringify({userid:userid}));
 			}
 		})
 	}
@@ -72,7 +65,6 @@ send_rev.show_search = function(db){
 send_rev.add_friend = function(db){
     var basic = db.get('basic');
     my_db = db;
-    //console.log("read");
     return function(req, res) {
         //tools.customSendText(req.body.receiver, "hby"+"想要关注你，回复'r"+sender.length+":y'同意关注，回复'r"+sender.length+":n'拒绝关注");
         userid1[userid1.length] = req.body.userid;
@@ -97,16 +89,13 @@ send_rev.add_friend = function(db){
         meg_tag[meg_tag.length] = 0;
         var meg = {"info":"y"};
         res.send(JSON.stringify(meg));
-        //console.log(userid);
     }
 }
 
 send_rev.add_special_friend = function(db){
     var basic = db.get('basic');
     my_db = db;
-    //console.log("read");
     return function(req, res) {
-        //tools.customSendText(req.body.receiver, "hby"+"想要关注你，回复'r"+sender.length+":y'同意关注，回复'r"+sender.length+":n'拒绝关注");
         special_userid1[special_userid1.length] = req.body.userid;
         special_userid2[special_userid2.length] = req.body.friendid;
         basic.find({}, function(err,docs) {

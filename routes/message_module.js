@@ -37,7 +37,7 @@ message_module.send_walk_module = function(open_id, steps){
 
         "touser":open_id,
 
-        "template_id":"C_L-8NaIkqDFlLMRYMbr63wJBMsvoKxm2ekOIvaVa_4",
+        "template_id":"NLTGH1o1NlDyzfIkmAGJcAMiUkYTjlZWN9U_9h403Ws",
         "url":"http://weixin.qq.com/download",
 
         "topcolor":"green",
@@ -83,11 +83,12 @@ message_module.send_walk_module = function(open_id, steps){
 }
 
 message_module.send_sleep_module = function(open_id, sleep_time){
+    console.log(sleep_time);
   var model_info = {
 
         "touser":open_id,
 
-        "template_id":"CFlHUYq63-ZlGxnXZmjysmkiV7qGIg_0Ave-3EfHNs0",
+        "template_id":"rcBsY0OdChZ3hmlXxAn6jGtVzY5JMen5y4ATgDC6fos",
         "url":"http://weixin.qq.com/download",
 
         "topcolor":"#FF0000",

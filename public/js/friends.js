@@ -1,5 +1,5 @@
 //需要传递的初始参数
-var userid = window.userid;  //存储openid
+var userid = "";  //存储openid
 var page_id = 0; //存储当前页面
 //var ip = #{ip};
 
@@ -13,12 +13,27 @@ var current_special_friend = 1;
 var current_click_spec_id = 0;
 
 $(window).load(function(){
+    var thisURL = document.URL; 
+    var getval =thisURL.split('?')[1];
+    var openid = getval.split("=")[1];
     $("nav li").css("color", "#8D8383");
     $(".selected").css("color", "#fff");
     $("nav li").click(switch_page);
     if(page_id == 0){
-        request_friend_list();
-    } else if(page_id == 1) {
+        $.ajax({
+        type:'post',
+        url:"/attention",
+        data:{"openid":openid},
+        dataType:"json",
+        success:function(data){
+            if(data){
+                userid = data.userid;
+                request_friend_list();
+            } else{
+                alert("返回值为空");
+            }
+        }
+    });
     }
     $("#left-arrow").css({
         "top":$(window).height()/2-30 + "px",
@@ -320,7 +335,6 @@ function show_chart(steps_week){
         "text-align":"center",
         //"top":"60%"
     });
-    //$('#chart_title').attr("width","100px");
     var window_height = document.all ? document.getElementsByTagName("html")[0].offsetHeight : window.innerHeight ;
     var window_width = document.all ? document.getElementsByTagName("html")[0].offsetWidth : window.innerWidth ;
     var width = window_height/50;
@@ -376,9 +390,6 @@ function request_search_result(info){
             }
         }
     });
-    /*$.post(url, {receiver:info, userid:userid},function(result){
-        show_search_result(result);
-    });*/
 }
 
 function show_friend_list(list){
@@ -401,6 +412,7 @@ function show_friend_list(list){
         "width": "72px",
         "height": "72px",
         "margin-right": "15px",
+        "margin-left": "15px",
         "overflow": "hidden",
     });
     $(".friend-name").css({"top":"20%","color":"violet"});

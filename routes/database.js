@@ -4,8 +4,6 @@ var tools = require('./tools');
 var message_module = require('./message_module');
 var database = {};
 var time = 1000;
-//console.log("2"+tools.access_token);
-
 
 function get_user_info(db, openid, i, access_token){
     var basic = db.get('basic');
@@ -25,9 +23,10 @@ function get_user_info(db, openid, i, access_token){
             info.icon = eval('('+d+')').headimgurl;
             basic.find({"openid":openid}, function(err,docs) {
                 if(docs.length == 0){
-                    var last_step = parseInt(Math.random()*20000);
-                    basic.insert({"userid":(i+""),"openid":openid,"nickname":info.nickname,"icon":info.icon,"height":0,"weight":0,"sex":"male","coins":100, "latitude":40.007+Math.random()/100, "longitude":116.315+Math.random()/100});
-                    travel_world.insert({"userid":(i+""),"openid":openid,"last_step":last_step,"now_step":20000+parseInt(Math.random()*15000),"trans_step":last_step,"f_vehicle":"shoes","vehicle":"nothing"})
+                    var x = parseInt(Math.random()*40000);
+                    //var y = parseInt(Math.random()*2);
+                    basic.insert({"userid":(i+""),"openid":openid,"nickname":info.nickname,"icon":info.icon,"height":0,"weight":0,"sex":"male","coins":300, "latitude":40.007+Math.random()/100, "longitude":116.315+Math.random()/100});
+                    travel_world.insert({"userid":(i+""),"openid":openid,"last_step":x,"now_step":20000+x,"trans_step":x,"f_vehicle":"shoes","vehicle":"nothing"})
                     shopping.insert({"userid":(i+""),"openid":openid,"attention":100,"near_map":1})
                     var today = new Date();
                     today.setDate(today.getDate()-tools.previousDays+1);
@@ -102,48 +101,6 @@ database.add_day_data = function (db){
             }
         }
     });
-    /*var access_token;
-    var userlist = [];
-
-    var options = {
-        hostname: 'api.weixin.qq.com',
-        port: 443,
-        path: '/cgi-bin/token?grant_type=client_credential&appid='+tools.appid+'&secret='+tools.appsec,
-        method: 'GET'
-    };
-
-    var req = https.request(options, function(res) {
-        res.on('data', function(d) {
-            access_token = eval('('+d+')').access_token;
-            //console.log(access_token+"hby");
-            var option = {
-                hostname: 'api.weixin.qq.com',
-                port: 443,
-                //https://api.weixin.qq.com/cgi-bin/user/get?access_token=ACCESS_TOKEN&next_openid=NEXT_OPENID
-                path: '/cgi-bin/user/get?access_token='+access_token,
-                method: 'GET'
-            };
-            var reqs = https.request(option, function(res) {
-                res.on('data', function(d) {
-                    userlist = eval('('+d+')').data.openid;
-                    for (var i=0;i<userlist.length;i++){
-                        get_day_data(db, userlist[i], i, access_token);
-                    }
-                });
-            });
-            reqs.end();
-
-            reqs.on('error', function(e) {
-                console.error(e);
-            });
-        });
-    });
-    req.end();
-
-    req.on('error', function(e) {
-        console.error(e);
-    });
-*/
 }
 
 database.add_walk_detail = function(db){
@@ -232,6 +189,17 @@ function add_user(db){
     req.on('error', function(e) {
         console.error(e);
     });
+}
+
+database.add_country_info=function(db){
+    var country_info = db.get('country_info');
+    var len = all_country_info.length;
+    for(var i=0;i<len;i++){
+        //console.log(i);
+        all_country_info[i].seq_id = i;
+        country_info.insert(all_country_info[i]);
+    }
+    //console.log("country_info");
 }
 
 module.exports = database;
