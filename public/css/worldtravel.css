@@ -1,0 +1,162 @@
+@media screen and (max-height: 320px) {
+        #map_base svg {
+            height: 100px;
+        }
+    }
+
+@media screen and (max-height: 400px) and (min-height: 321px) {
+    #map_base svg {
+        height: 134px;
+    }
+}
+
+@media screen and (max-height: 480px) and (min-height: 401px) {
+    #map_base svg {
+        height: 170px;
+    }
+}
+
+@media screen and (max-height: 568px) and (min-height: 481px) {
+    #map_base svg {
+        height: 210px;
+    }
+}
+
+@media screen and (max-height: 685px) and (min-height: 569px) {
+    #map_base svg {
+        height: 252px;
+    }
+}
+
+@media screen and (max-height: 767px) and (min-height: 686px) {
+    #map_base svg {
+        height: 310px;
+    }
+}
+
+@media screen and (max-height: 979px) and (min-height: 768px) {
+    #map_base svg {
+        height: 360px;
+    }
+}
+
+@media screen and (max-height: 1024px) and (min-height: 980px) {
+    #map_base svg {
+        height: 470px;
+    }
+}
+
+@media screen and (max-height: 1280px) and (min-height: 1025px) {
+    #map_base svg {
+        height: 470px;                          
+    }
+}
+
+@media screen and (min-height: 1281px) {
+    #map_base svg {
+        height: 580px;
+    }
+}
+
+body{
+    -webkit-user-select:none;
+}
+
+body{
+    color:#2b2b2b;
+    font-size:.14rem;
+    background: #FF7F00;
+    overflow-x: hidden;
+}
+
+body{
+    font:400 14px/1.5 "\5FAE\8F6F\96C5\9ED1",Helvetica;
+}
+
+html{
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.header{
+    display: -webkit-box;
+    -webkit-box-pack: justify;
+    height:40px;
+    line-height: 40px;
+    text-align: center;
+    background: #2a313b;
+    color:#fff;
+    font-size: 20px;
+    overflow: hidden;
+}
+
+li{
+    margin-left: 10px;
+    margin-right: 10px;
+    list-style: none;
+}
+
+#flags{
+    width: 100%;
+    margin-top: 50px;
+    margin-left: 5%;
+}
+
+
+#header
+{
+	position:fixed;
+	width:100%;
+	height:20%;
+    top:40px;
+	background-color:#dddddd;
+    z-index:100;
+    display:none;
+}
+
+#head_img
+{
+	top:25%;
+	position:absolute;
+	left:5%;
+	height:50%;
+	border-radius:50%;
+	-moz-border-radius:50%;
+}
+
+#hello
+{
+	position:absolute;
+	left:30%;
+	top:30.11%;
+	font-size:1em;
+	color:#aaaaaa;
+}
+
+#world_text
+{
+	position:absolute;
+	left:30%;
+	bottom:28%;
+	font-size:1em;
+	width:70%;
+	color:#000000;
+}
+
+#wrapper_page1{
+    position:absolute;
+}
+
+#mask_page2{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top:0;
+    left:0;
+    background-color: black;
+    opacity: 0.8;
+    display: none;
+    z-index: 2;
+}

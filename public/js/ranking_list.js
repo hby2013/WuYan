@@ -73,7 +73,7 @@ function show_list(data){
         $("#longest_dividing").val(data.list[0].similarity);
     document.body.appendChild(longest_dividing);
     var map_entry = document.createElement("a");
-    map_entry.setAttribute("href","/map.html?myid="+data.myid);
+    map_entry.setAttribute("href","/invitation.html?myid="+data.myid);
     document.body.appendChild(map_entry);
     var input = document.createElement("input");
     input.setAttribute("type","button");

@@ -1,5 +1,4 @@
 var aa = 0;
-var db
 exports.info = function(db) {
 	return function(req, res) {
 		var openid = req.body.openid;
@@ -39,13 +38,13 @@ exports.logging_finished = function(db) {
     return function(req, res) {
         var info = db.get('basic');
         var sex = req.body.sex;
-        var username = req.body.username;
+        var openid = req.body.openid;
         var weight = req.body.weight;
         var height = req.body.height;
-        console.log("hh"+sex);
-        info.update({"openid":username},{$set:{"sex":sex}}); 
-        info.update({"openid":username},{$set:{"height":height}});  
-        info.update({"openid":username},{$set:{"weight":weight}});
+        //console.log("hh"+sex);
+        info.update({"openid":openid},{$set:{"sex":sex}}); 
+        info.update({"openid":openid},{$set:{"height":height}});  
+        info.update({"openid":openid},{$set:{"weight":weight}});
         res.send("succesuful!");
     }
 }

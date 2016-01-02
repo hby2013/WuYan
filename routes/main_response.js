@@ -32,7 +32,6 @@ server.use('/', wechat(config).text(function(message, req, res, next){
   res.reply("link");
 }).event(function(message, req, res, next){
   if(req.weixin.Event == 'CLICK' && req.weixin.EventKey == 'WALK_TODAY') {
-    console.log("click");
     query_steps_today(message, req, res, next);
   } else if (req.weixin.Event == 'CLICK' && req.weixin.EventKey == 'WALK_WEEK') {
     query_steps_week(message, req, res, next);
@@ -49,9 +48,16 @@ server.use('/', wechat(config).text(function(message, req, res, next){
   }else if (req.weixin.Event == 'CLICK' && req.weixin.EventKey == 'ACHIEVEMENTS') {
     get_info(message, req, res, next);
   }else {
-    //res.reply("imdddage");
-    database.adduser(db);
-    //res.reply("image");
+    database.adduser(db, message.FromUserName);
+    if(message.Latitude != undefined){
+      var info = db.get("basic");
+      info.update({"openid":message.FromUserName},{$set:{"latitude":message.latitude}}); 
+      info.update({"openid":message.FromUserName},{$set:{"longitude":message.longitude}});
+      res.reply("");
+    }
+    else{
+      res.reply("如果你需要使用排行榜及运动邀请功能，请同意公众号获取你的地理位置！");
+    }
   }
 }).middlewarify());
 
@@ -144,13 +150,25 @@ function query_sleep_today(message, req, res, next) {
 }
 
 function query_ranking(message, req, res, next) {
-    var url = "http://"+ip_address+"/ranking.html?openid="+message.FromUserName;
-    tools.customSendArticle(message.FromUserName, "本日运动排行榜", "点击查看详细", "http://img.taopic.com/uploads/allimg/120410/9128-12041023430285.jpg", url);
-    res.reply('');
+    var basic = db.get("basic");
+    basic.find({"openid":message.FromUserName}, function(err,docs) {
+      if(docs.length == 0) {
+      } else {
+        if(docs[0].latitude>90){
+            var url = "http://"+ip_address+"/ranking.html?openid="+message.FromUserName;
+            tools.customSendArticle(message.FromUserName, "本日运动排行榜", "点击查看详细", "http://img.taopic.com/uploads/allimg/120410/9128-12041023430285.jpg", url);
+            res.reply('');
+        }
+        else{
+          res.reply("无法获取你的地理位置！");
+          res.reply('');
+        }
+      }
+    });
 }
 
 function query_world(message, req, res, next) {
-    var url = "http://"+ip_address+"/story1/index.html?openid="+message.FromUserName;
+    var url = "http://"+ip_address+"/world_travel.html?openid="+message.FromUserName;
     tools.customSendArticle(message.FromUserName, "环游世界", "点击查看详细", "http://pic2.ooopic.com/12/63/98/45bOOOPIC82_1024.jpg", url);
     res.reply('');
 }

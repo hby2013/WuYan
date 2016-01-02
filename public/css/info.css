@@ -1,0 +1,73 @@
+body{
+    margin:0;
+    padding:0;
+    background-color:#eeeeee;
+    font-family:微软雅黑
+}
+
+#open_id{
+    display:none;
+}
+
+#choose_sex{
+    position:absolute;
+    width:100%;
+    top:15%;
+}
+
+#male{
+    position:absolute;
+    top:15%;
+    left:54%;
+    width:37%;
+    box-shadow:inset 0 0 10px #aaaaaa;
+}
+
+#female{
+    position:absolute;
+    top:15%;
+    left:10%;
+    width:30%;
+}
+
+#weight{
+    position:absolute;
+    left:20%;
+    width:60%;
+}
+
+#weight_title{
+    float:left;
+    position:absolute;
+}
+
+#weight_input{
+    float:left;
+    position:absolute;
+    left:35%;
+    width:70%;
+}
+
+#height{
+    position:absolute;
+    left:20%;
+    width:60%;
+}
+
+#height_title{
+    float:left;
+    position:absolute;
+}
+
+#height_input{
+    float:left;
+    position:absolute;
+    left:35%;
+    width:70%;
+}
+
+#submit{
+    position:absolute;
+    left:35%;
+    width:30%;
+}

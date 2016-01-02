@@ -5,20 +5,17 @@ var fs = require("fs");
 var https = require('https');
 var path = require("path");
 var https = require('https'); 
-/*
+
 process.argv.forEach(function (val, index, array) {
     tools.token = array[2];
     tools.appid = array[3];
     tools.appsec = array[4];
     tools.ip = array[5];
 }); 
-*/
-tools.token = "hby13";
-tools.appid = "wx04f3330c621e1dec";
-tools.appsec = "d4624c36b6795d1d99dcf0547af5443d"; 
-tools.ip = "127.0.0.1";
+
+
 tools.access_token = "";
-tools.previousDays = 9;
+tools.previousDays = 7;
 
 var custom_url = "https://api.weixin.qq.com/cgi-bin/message/custom/send";
 var device_url = "https://api.weixin.qq.com/device/";

@@ -1,0 +1,59 @@
+<!DOCTYPE html>  
+<html xmlns="http://www.w3.org/1999/xhtml">  
+<head>  
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>附近的人</title>  
+    <!--css-->  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <link href="css/demo.css" rel="stylesheet" type="text/css" />  
+    <!--javascript-->  
+    <script src="js/jquery.js" type="text/javascript"></script>   
+    <script src="js/Chart-1.0.1-beta.4.js"></script>
+    <script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script>
+    <!--<script type="text/javascript" src="js/transmore.js"></script>-->
+    <script src="js/jquery.js"></script>
+    <script src="js/mobiscroll_002.js" type="text/javascript"></script>
+	<script src="js/mobiscroll_004.js" type="text/javascript"></script>
+	<link href="css/mobiscroll_002.css" rel="stylesheet" type="text/css">
+	<link href="css/mobiscroll.css" rel="stylesheet" type="text/css">
+	<script src="js/mobiscroll.js" type="text/javascript"></script>
+	<script src="js/mobiscroll_003.js" type="text/javascript"></script>
+	<script src="js/mobiscroll_005.js" type="text/javascript"></script>
+	<link href="css/mobiscroll_003.css" rel="stylesheet" type="text/css">
+    <script src="js/invitation.js" type="text/javascript"></script>
+</head>  
+<body style = "margin:0;padding:0;background-color:#eeeeee;font-family:微软雅黑">  
+    <div class="demo_main">   
+        <div class="demo_content">  
+            <div style="position:absolute;min-height:50%; width: 100%;" id="map">  
+            </div>  
+        </div>  
+    </div>  
+    <div id = "user_info" style = "position:absolute;width:100%;height:50%;top:50%">
+        <canvas id="myChart" style = "margin:0;padding:0"></canvas>
+        <div id = "go_date" onclick = "show_settings();" style="position:absolute;left:75%;height:30px;line-height:30px;width:20%;font-size:12px;background-color:#ccc;text-align:center;z-index:1;display:none;">约他运动</div>
+        <div class = "user_info0" style = "position:absolute;width:100%;height:20%;">
+            <img id = "icon2" style = "position:absolute;left:10%;width:15%;border-radius:50%;"/>
+            <div id = "nickname2" class = "username" style = "position:absolute;left:30%;top:10%;font-size:12px" ></div>
+            <div id = "similary" style="position:absolute;left:30%;bottom:20%;font-size:12px"></div>
+        </div>    
+    </div>
+    <div id = "hide_map" style = "position:absolute;bottom:50%;height:5%;background-color:#eee;width:100%;z-index:99"></div>
+    <div id = "cover" onclick = "close_settings()" style = "position:fixed;opacity:0.8;background-color:#333;width:100%;height:100%;z-index:100;display:none"></div>
+    <div id = "invitation_settings" style= "position:absolute;width:50%;height:200px;left:25%;top:28%;background-color:#ccc;z-index:101;border-radius:10px;display:none">
+		<label for="appDateTime" style = "font-size:12px;position:absolute;left:10%;top:10%;"><b>日期时间:</b></label>
+		<input readonly="readonly" name="appDateTime" id="appDateTime" type="text" style = "position:absolute;left:10%;top:20%;width:80%;font-size:12px"/>
+        <label for="appDateTime" style = "font-size:12px;position:absolute;left:10%;top:30%;"><b>地点:</b></label>
+        <input readonly="readonly" onclick = "choose_place()" id="place" type="text" style = "position:absolute;left:10%;top:40%;width:80%;font-size:12px"/>
+        <label for="appDateTime" style = "font-size:12px;position:absolute;left:10%;top:50%;"><b>附言:</b></label>
+        <input id="postscript" type="text" style = "position:absolute;left:10%;top:60%;width:80%;font-size:12px"/>
+        <div id = "go_date" onclick = "send_invitation()" style="position:absolute;left:30%;top:75%;width:40%;text-align:center;font-size:12px;height:15px;background-color:#eee">发送邀请</div>
+    </div>
+    <div id = "choose_place" style ="position:fixed;width:100%;height:100%;background-color:#eee;z-index:102;display:none">
+        <div id = "map_to_choose" style="position:absolute;width:100%;height:85%" ></div>
+        <input id="chosen_place" type="text" style = "position:absolute;left:10%;top:90%;width:40%;font-size:12px"/>
+        <div id = "confirm_place" onclick = "confirm_place()" style="position:absolute;left:60%;top:90%;width:15%;text-align:center;font-size:12px;height:20px;line-height:20px;background-color:#ccc">确定</div>
+        <div id = "cancel_place" onclick = "cancel_place()" style="position:absolute;left:80%;top:90%;width:15%;text-align:center;font-size:12px;height:20px;line-height:20px;background-color:#ccc">取消</div>
+    </div>
+</body>  
+</html>  

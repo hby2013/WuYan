@@ -5,8 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
+//var routes = require('./routes/index');
+//var users = require('./routes/users');
 var query_steps = require('./routes/steps');
 var query_ranking = require('./routes/ranking');
 var attention = require('./routes/attention');
@@ -36,8 +36,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/users', users);
+//app.use('/', routes);
+//app.use('/users', users);
 app.use('/wechat/', wechat);
 
 // check weekly report

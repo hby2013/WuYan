@@ -42,7 +42,7 @@
 $('#submit').click(function(){
     var weight = $("#weight_input").val();
     var height = $("#height_input").val();
-    var username = $("#open_id").val();
+    var openid = $("#open_id").val();
     //alert(sex);
     //alert(username);
     if(window.confirm('您将修改信息并退出。')){    
@@ -54,7 +54,7 @@ $('#submit').click(function(){
     $.ajax({
         type:'post',
         url:"/logging",
-        data:{"username":username, "sex":sex, "weight":weight, "height":height},
+        data:{"openid":openid, "sex":sex, "weight":weight, "height":height},
         dataType:"json",
         success:function(data){
             if(data){
